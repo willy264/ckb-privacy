@@ -84,4 +84,4 @@ The default page is the CCC-oriented application concept. Its privacy operations
 
 Grant proposal and funding materials are maintained locally and are intentionally not tracked in this repository.
 
-Obscell is testnet-first research software. Do not use it to protect assets of value.
+Obscell is testnet-first research software. Do not use it to protect assets of value
