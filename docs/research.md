@@ -1,22 +1,26 @@
-# Research And Design Record
+# Obscell Privacy Protocol: Research And Design Record
 
-**Status:** Living engineering record, updated 2026-09-05. It describes the repository honestly; it is not a security audit or deployment report.
+**Status:** Living engineering record, documentation updated 2026-09-12. Earlier measurements retain their original provenance. This is not a security audit or deployment report.
 
 ## 1. Problem Statement
 
-CKB applications already have connectivity, transaction, and signer infrastructure through CCC. Requiring every application to understand note secrets, Merkle paths, proof ABIs, nullifiers, CT conservation, coordinators, and relayers prevents privacy from becoming reusable infrastructure. Obscell's goal is a privacy-specific SDK that consumes injected CCC primitives and hides those internals without weakening on-chain enforcement.
+CKB applications already have connectivity, transaction, and signer infrastructure through CCC. Requiring every application to reimplement note handling, Merkle paths, proof ABIs, nullifiers, CT conservation, and CKB state rules makes integration difficult and repeats security-sensitive work. **Obscell Privacy Protocol — CKB Privacy Core and SDK** aims to put those rules and their implementation into reusable infrastructure, then expose them through a developer SDK without weakening on-chain enforcement.
+
+The architectural relationship is Application -> Privacy SDK -> Privacy Core / CKB scripts. Privacy Protocol defines validity rules and Privacy Core implements them. The SDK's CCC adapter receives the application's existing Client and operation-scoped Signer for CKB transaction construction, signing, and submission; CCC is an injected dependency, not an implementation layer beneath Core. The reference application is the first controlled SDK consumer, not a separately funded wallet product. Its fixed-denomination pool validates the protocol's commitments, Merkle state, nullifiers, proof authorization, CT conservation, and CKB state transitions; the pool is not the project's architectural boundary. Core and Protocol describe one infrastructure layer rather than two independently funded products.
 
 ## 2. CKB Privacy Landscape And Research
 
 CKB's Cell Model separates ownership in lock scripts from state-transition rules in type scripts. Type scripts execute for both consumed and created script groups, which is the basis for an authoritative singleton PoolState transition. Type ID provides a unique immutable reference for that state. Primary references are the [CKB transaction structure RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0022-transaction-structure/0022-transaction-structure.md), [genesis script list](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0024-ckb-genesis-script-list/0024-ckb-genesis-script-list.md), and [CKB RFC 0002](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md).
 
-The local `obscell-source/` checkout supplied CT-token, CT-info, stealth-lock, simulator, and deployment research. It is gitignored external source, not silently vendored corrected-V1 code. Its techniques require protocol-specific review before reuse.
+The local `obscell-source/` checkout of [Quake's Obscell fork](https://github.com/quake/obscell) supplied CT-token, CT-info, stealth-lock, simulator, and deployment research. It is gitignored external source, not silently vendored corrected-V1 code. The earlier Obscell concept belongs to Rea-Don-Lycn and subsequent work includes Quake's extensions; this repository is willy264's implementation and evolution of the prototype, with that prior work credited. Its techniques require protocol-specific review before reuse.
 
 The repository's earlier landscape and CCC research remains in `progress/august_week_1_research_report.md`. This document supersedes its protocol recommendations where the later audit found authority or binding gaps.
 
-## 3. Original Obscell V1
+## 3. Previous Reference Prototype And Project Evolution
 
 The original prototype combined fixed `100 CT` cells, browser-generated secret material, encrypted recovery notes, a coordinator-backed four-party round, a depth-20 Poseidon tree, browser Groth16 proving, a flat nullifier registry, and direct or relayed withdrawal submission. This was real implementation work and is preserved under the `legacy-demo` label.
+
+The [existing Nervos community discussion](https://talk.nervos.org/t/introducing-obscell-privacy-mixer-a-zero-knowledge-withdrawal-mixer-prototype-on-nervos-ckb/10456) records that previous prototype and credits the earlier Obscell research. Its historical MVP/Pudge statements are not evidence that corrected V1 is deployed. The progression is initial pool prototype -> implementation lessons and research -> corrected authority/verification design -> reusable Privacy Core and SDK -> SDK-oriented reference application. The current public name describes this direction while `ckb-privacy-mixer` and `mixer-sdk` remain compatibility paths.
 
 ## 4. Original Architecture
 
@@ -133,7 +137,7 @@ The SDK therefore receives an injected `ccc.Client`; methods requiring wallet au
 
 ## 15. SDK Architecture
 
-`PrivacyClient` coordinates capability checks, chain sync, local notes, protocol validation, and service boundaries. A typed prover interface and proof ABI exist, but no callable corrected-V1 proof workflow is exposed and the capability remains unavailable. Internal modules separate `core`, `protocol`, `crypto`, `merkle`, `nullifier`, `notes`, `prover`, `ccc`, `services`, and `validation`. The public API exposes fixed-pool operations instead of raw witnesses or arbitrary value selection. Verified sync results use a store-level atomic checkpoint compare-and-swap, so two clients sharing state cannot silently overwrite a newer snapshot; durable encrypted storage and cross-process atomicity remain application responsibilities.
+`PrivacyClient` is the developer interface to the Privacy Core / Protocol. It coordinates capability checks, chain sync, local notes, protocol validation, and service boundaries. A typed prover interface and proof ABI exist, but no callable corrected-V1 proof workflow is exposed and the capability remains unavailable. Internal modules separate `core`, `protocol`, `crypto`, `merkle`, `nullifier`, `notes`, `prover`, `ccc`, `services`, and `validation`; the literal `core/` directory is client orchestration, while the architectural Privacy Core spans the protocol, cryptographic, state, circuit, and script implementation. The current public client targets the fixed-denomination V1 lifecycle. Verified sync results use a store-level atomic checkpoint compare-and-swap, so two clients sharing state cannot silently overwrite a newer snapshot; durable encrypted storage and cross-process atomicity remain application responsibilities.
 
 ## 16. Coordinator And Relayer Trust Model
 
@@ -153,6 +157,10 @@ The target strategy layers tests across Circom, Rust/CKB, TypeScript SDK, servic
 
 The decisive test begins with a pre-existing user-owned supported CT cell and ends with the recipient spending the withdrawn CT through CCC. It also requires replay, recipient mutation, stale state, and Redis-wipe rebuild failures/successes. Exact evidence requirements are in `docs/pudge-runbook.md`. A transaction hash alone is not sufficient evidence.
 
+The five-month / approximately 20-week plan allocates core architecture/vectors, implementation, and SDK integration to the first three months; complete reference integration and real Pudge transactions to Month 4; and hardening and release to Month 5. The final month addresses integration defects, cryptographic findings, testnet issues, independent review, remediation, deployment preparation, and final release evidence. Mainnet deployment follows only where all gates pass. If mainnet gates remain unmet, deliver the validated testnet release and documented remediation state instead; any unresolved testnet acceptance remains incomplete. Correctness and security findings can block deployment; the timeline does not override them.
+
+Mainnet requires passing protocol, cryptographic, adversarial, state-transition, and SDK tests; complete verified Pudge lifecycle evidence; independent review with no unresolved critical or high findings; reproducible artifacts and complete documentation; and a separate mainnet network/manifest preflight. These are future acceptance requirements, not completed results. [The deployment guide](deployment.md) also separates CKB script deployment, open-source SDK publication, and reference-frontend hosting. A web host has no consensus authority, although a malicious interface remains a client secret/signing risk.
+
 ## 20. Rejected Alternatives
 
 - **Coordinator as root authority:** rejected because service compromise or data loss would change protocol truth.
@@ -171,4 +179,4 @@ Corrected V1 currently has source-level and fail-closed covenant foundations but
 
 ## 22. Future V2 Work
 
-Only after V1 review and testnet evidence: arbitrary denominations, multiple assets, private-to-private transfer, multi-input/multi-output join-split, shielded change, advanced recipient privacy/stealth, decentralized service discovery, additional proof systems, mobile-specific storage/proving, governance, and mainnet readiness. These items are explicitly outside the currently funded V1 scope.
+Possible later protocol extensions include arbitrary denominations, multiple assets, private-to-private transfer, multi-input/multi-output join-split, shielded change, advanced recipient privacy/stealth, decentralized service discovery, additional proof systems, mobile-specific storage/proving, and governance. Potential applications include wallet privacy, private payments, private DeFi interactions, and privacy-preserving application state. These are future research/adoption directions outside this grant, not current functionality. Mainnet readiness and deployment of the bounded V1 protocol are part of the current gated target described above; additional privacy operations are not.

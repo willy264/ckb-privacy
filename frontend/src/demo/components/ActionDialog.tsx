@@ -1,7 +1,7 @@
-import { ArrowDownToLine, EyeOff, Send, X } from "lucide-react";
+import { ArrowDownToLine, EyeOff, X } from "lucide-react";
 import { useCallback, useEffect, useRef, type FormEvent } from "react";
 
-export type DemoDialogAction = "shield" | "payment" | "unshield";
+export type DemoDialogAction = "shield" | "unshield";
 
 const DIALOG_COPY: Record<
   DemoDialogAction,
@@ -9,21 +9,14 @@ const DIALOG_COPY: Record<
 > = {
   shield: {
     eyebrow: "Protocol simulation",
-    title: "Shield assets",
+    title: "Fund private state",
     description:
-      "Model one fixed CT note entering the target privacy pool. No transaction will be signed or submitted.",
+      "Simulate a shield operation using the protocol's fixed-note reference use case. No transaction will be signed or submitted.",
     button: "Run shield simulation",
-  },
-  payment: {
-    eyebrow: "Future capability simulation",
-    title: "Send privately",
-    description:
-      "Preview an unshield-to-recipient flow. Private-to-private transfers are outside protocol-correct V1.",
-    button: "Prepare payment concept",
   },
   unshield: {
     eyebrow: "Protocol simulation",
-    title: "Unshield assets",
+    title: "Unshield note",
     description:
       "Model note consumption and a recipient-bound CT output. No transaction will be signed or submitted.",
     button: "Run unshield simulation",
@@ -32,33 +25,24 @@ const DIALOG_COPY: Record<
 
 export function ActionDialog({
   action,
-  recipient,
-  recipientBusy,
-  recipientError,
-  onRecipientChange,
   onClose,
   onConfirm,
 }: {
   action: DemoDialogAction;
-  recipient: string;
-  recipientBusy: boolean;
-  recipientError: string | null;
-  onRecipientChange: (value: string) => void;
   onClose: () => void;
   onConfirm: () => void;
 }) {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
-  const recipientInputRef = useRef<HTMLInputElement | null>(null);
   const dialogRef = useRef<HTMLElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const copy = DIALOG_COPY[action];
   const requestClose = useCallback(() => {
-    if (!recipientBusy) onClose();
-  }, [onClose, recipientBusy]);
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
-    (action === "payment" ? recipientInputRef.current : closeButtonRef.current)?.focus();
+    closeButtonRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") requestClose();
       if (event.key !== "Tab" || !dialogRef.current) return;
@@ -90,8 +74,7 @@ export function ActionDialog({
     onConfirm();
   };
 
-  const ActionIcon =
-    action === "shield" ? EyeOff : action === "payment" ? Send : ArrowDownToLine;
+  const ActionIcon = action === "shield" ? EyeOff : ArrowDownToLine;
 
   return (
     <div className="demo-dialog-backdrop" role="presentation" onMouseDown={requestClose}>
@@ -113,7 +96,6 @@ export function ActionDialog({
             className="demo-icon-button"
             type="button"
             onClick={requestClose}
-            disabled={recipientBusy}
             aria-label="Close dialog"
             title="Close"
           >
@@ -127,55 +109,30 @@ export function ActionDialog({
           <div className="demo-dialog-amount">
             <span>Amount</span>
             <strong>100 CT</strong>
-            <small>Fixed protocol-correct V1 denomination</small>
+            <small>Local reference fixture denomination</small>
           </div>
 
-          {action === "payment" ? (
-            <label className="demo-field">
-              <span>Recipient CKB address</span>
-              <input
-                ref={recipientInputRef}
-                value={recipient}
-                onChange={(event) => onRecipientChange(event.target.value)}
-                placeholder="Enter a recipient address"
-                autoComplete="off"
-                required
-                aria-invalid={Boolean(recipientError)}
-                aria-describedby="demo-recipient-help"
-              />
-              <small
-                id="demo-recipient-help"
-                className={recipientError ? "demo-field-error" : undefined}
-                role={recipientError ? "alert" : undefined}
-              >
-                {recipientError ?? "Validated with CCC, then used only in this local simulation."}
-              </small>
-            </label>
-          ) : (
-            <div className="demo-dialog-route">
-              <span>{action === "shield" ? "Destination" : "Recipient"}</span>
-              <strong>
-                {action === "shield" ? "Private balance" : "Connected public account"}
-              </strong>
-            </div>
-          )}
+          <div className="demo-dialog-route">
+            <span>{action === "shield" ? "Destination" : "Recipient"}</span>
+            <strong>
+              {action === "shield" ? "Private balance" : "Connected public account"}
+            </strong>
+          </div>
 
           <div className="demo-dialog-actions">
             <button
               className="demo-button demo-button--quiet"
               type="button"
               onClick={requestClose}
-              disabled={recipientBusy}
             >
               Cancel
             </button>
             <button
               className="demo-button demo-button--primary"
               type="submit"
-              disabled={recipientBusy || (action === "payment" && !recipient.trim())}
             >
               <ActionIcon aria-hidden="true" />
-              {recipientBusy ? "Validating address..." : copy.button}
+              {copy.button}
             </button>
           </div>
         </form>

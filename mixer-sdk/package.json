@@ -1,7 +1,7 @@
 {
   "name": "mixer-sdk",
   "version": "0.1.0",
-  "description": "SDK for CKB Privacy Mixer",
+  "description": "Developer SDK for Obscell Privacy Protocol on CKB",
   "type": "module",
   "main": "dist/v1/index.js",
   "types": "dist/v1/index.d.ts",

@@ -3,7 +3,6 @@ import {
   ArrowDownToLine,
   ArrowRight,
   Braces,
-  Check,
   ExternalLink,
   EyeOff,
   Landmark,
@@ -12,7 +11,6 @@ import {
   Network,
   Plug,
   RefreshCcw,
-  Send,
   ShieldCheck,
   Smartphone,
   WalletCards,
@@ -55,25 +53,14 @@ const VIEW_ITEMS: readonly { id: DemoView; label: string; icon: LucideIcon }[] =
   { id: "protocol", label: "Protocol", icon: Network },
 ];
 
-const CONSUMERS: Record<
-  PrivacyConsumerId,
-  { shortLabel: string; title: string; eyebrow: string; icon: LucideIcon; description: string }
-> = {
-  "reference-wallet": {
-    shortLabel: "Reference Wallet",
-    title: "Obscell Privacy Reference Wallet",
-    eyebrow: "Reference implementation - Prototype",
-    icon: WalletCards,
-    description: "One application consuming the same CCC-compatible privacy interface.",
-  },
-  "payment-app": {
-    shortLabel: "Payment App",
-    title: "CKB Payment App",
-    eyebrow: "Second CCC application - Example consumer",
-    icon: Landmark,
-    description: "A separate payment experience reusing the shared private state abstraction.",
-  },
-};
+const REFERENCE_CONSUMER: PrivacyConsumerId = "reference-wallet";
+const REFERENCE_APP = {
+  title: "Private state workspace",
+  eyebrow: "Reference implementation · Local simulation",
+  icon: WalletCards,
+  description:
+    "Explore the first protocol use case: one fixed CT note, its private state, and the operation lifecycle exposed through the SDK.",
+} as const;
 
 function shortAddress(address: string) {
   if (address.length <= 22) return address;
@@ -100,17 +87,17 @@ function DemoHeader({
   return (
     <header className="demo-header">
       <div className="demo-header-inner">
-        <a className="demo-brand" href="/" aria-label="Obscell Privacy demo home">
+        <a className="demo-brand" href="/" aria-label="Obscell Privacy Protocol demo home">
           <img src="/logo.png" alt="" />
           <span>
-            <strong>Obscell Privacy</strong>
-            <small>CCC module preview</small>
+            <strong>Obscell Privacy Protocol</strong>
+            <small>Reusable infrastructure for CKB</small>
           </span>
         </a>
 
         <div className="demo-header-status">
           <span className="demo-status-chip demo-status-chip--simulation">
-            Interactive concept - privacy simulated
+            Local protocol simulation
           </span>
           {isLive ? (
             <button
@@ -137,9 +124,9 @@ function DemoHeader({
               <Plug aria-hidden="true" />
               <span>
                 <strong>
-                  {connection.status === "connecting" ? "Opening JoyID..." : "Connect live CCC wallet"}
+                  {connection.status === "connecting" ? "Opening JoyID..." : "Connect CKB wallet"}
                 </strong>
-                <small>Current session: local CCC fixture</small>
+                <small>JoyID through CCC · operations stay local</small>
               </span>
             </button>
           )}
@@ -190,24 +177,24 @@ function AudienceTabs({ view, onChange }: { view: DemoView; onChange: (view: Dem
 
 function BalanceBand({ snapshot, privacyEnabled }: { snapshot: DemoPrivacySnapshot; privacyEnabled: boolean }) {
   return (
-    <section className="demo-balance-band" aria-label="CT balances">
+    <section className="demo-balance-band" aria-label="Simulated CT state">
       <div className="demo-balance-item">
-        <span>Public balance</span>
+        <span>Public CT · simulated</span>
         <strong>{snapshot.publicBalance.toString()} <small>CT</small></strong>
-        <p>CCC application state</p>
+        <p>Local fixture · no wallet funds</p>
       </div>
       <div className="demo-balance-divider" aria-hidden="true">
         <ArrowRight />
       </div>
       <div className={`demo-balance-item demo-balance-item--private${privacyEnabled ? " is-visible" : ""}`}>
-        <span>Private balance</span>
+        <span>Private CT · simulated</span>
         <strong>
           {privacyEnabled ? snapshot.privateBalance.toString() : "--"} <small>CT</small>
         </strong>
         <p>
           {privacyEnabled
-            ? `${snapshot.notes.filter((note) => note.status === "available").length} available fixed note`
-            : "Available after opt-in"}
+            ? `${snapshot.notes.filter((note) => note.status === "available").length} available fixed note(s)`
+            : "Initialize local state to inspect"}
         </p>
       </div>
     </section>
@@ -220,8 +207,8 @@ function AssetJourney({ snapshot }: { snapshot: DemoPrivacySnapshot }) {
     <section className="demo-asset-journey" aria-labelledby="asset-journey-title">
       <div className="demo-section-heading">
         <div>
-          <span className="demo-eyebrow">Opt-in asset route</span>
-          <h2 id="asset-journey-title">CCC stays underneath the privacy capability</h2>
+          <span className="demo-eyebrow">First controlled use case</span>
+          <h2 id="asset-journey-title">A fixed note validates the protocol lifecycle</h2>
         </div>
         <span className="demo-mini-label">100 CT fixed note</span>
       </div>
@@ -241,8 +228,8 @@ function AssetJourney({ snapshot }: { snapshot: DemoPrivacySnapshot }) {
           transition={{ duration: 0.22 }}
         >
           <Layers aria-hidden="true" />
-          <span>Obscell</span>
-          <strong>Privacy layer</strong>
+          <span>Privacy Core</span>
+          <strong>Protocol state</strong>
         </motion.div>
         <span className="demo-journey-arrow">
           <ArrowRight aria-hidden="true" />
@@ -259,8 +246,6 @@ function AssetJourney({ snapshot }: { snapshot: DemoPrivacySnapshot }) {
 }
 
 function ApplicationView({
-  consumer,
-  onConsumerChange,
   privacyEnabled,
   privacyEnabling,
   onPrivacyModeChange,
@@ -268,8 +253,6 @@ function ApplicationView({
   operation,
   onOpenAction,
 }: {
-  consumer: PrivacyConsumerId;
-  onConsumerChange: (consumer: PrivacyConsumerId) => void;
   privacyEnabled: boolean;
   privacyEnabling: boolean;
   onPrivacyModeChange: (enabled: boolean) => void;
@@ -277,7 +260,7 @@ function ApplicationView({
   operation?: PrivacyOperation;
   onOpenAction: (action: DemoDialogAction) => void;
 }) {
-  const app = CONSUMERS[consumer];
+  const app = REFERENCE_APP;
   const AppIcon = app.icon;
   const availableNote = snapshot.notes.some((note) => note.status === "available");
   const busy = Boolean(snapshot.activeOperationId) || privacyEnabling;
@@ -294,25 +277,12 @@ function ApplicationView({
               <p>{app.description}</p>
             </div>
           </div>
-          <div className="demo-consumer-switch" role="group" aria-label="Example application">
-            {(Object.keys(CONSUMERS) as PrivacyConsumerId[]).map((id) => (
-              <button
-                type="button"
-                key={id}
-                className={consumer === id ? "is-active" : ""}
-                aria-pressed={consumer === id}
-                onClick={() => onConsumerChange(id)}
-              >
-                {CONSUMERS[id].shortLabel}
-              </button>
-            ))}
-          </div>
         </header>
 
         <div className="demo-mode-band">
           <div>
-            <span className="demo-eyebrow">Application mode</span>
-            <strong>{privacyEnabled ? "Obscell privacy enabled" : "Standard CCC application"}</strong>
+            <span className="demo-eyebrow">Local state session</span>
+            <strong>{privacyEnabled ? "State inspection enabled" : "Ready to initialize"}</strong>
           </div>
           <div className="demo-mode-control" role="group" aria-label="Application privacy mode">
             <button
@@ -322,7 +292,7 @@ function ApplicationView({
               onClick={() => onPrivacyModeChange(false)}
               disabled={busy}
             >
-              <Landmark aria-hidden="true" /> Public
+              <Landmark aria-hidden="true" /> Overview
             </button>
             <button
               type="button"
@@ -332,7 +302,7 @@ function ApplicationView({
               disabled={busy}
             >
               <EyeOff aria-hidden="true" />
-              {privacyEnabling ? "Enabling..." : "Private"}
+              {privacyEnabling ? "Initializing..." : "Inspect state"}
             </button>
           </div>
         </div>
@@ -341,11 +311,11 @@ function ApplicationView({
 
         <div className="demo-action-band">
           <div>
-            <span className="demo-eyebrow">Privacy operations</span>
+            <span className="demo-eyebrow">Create a protocol operation · Simulation</span>
             <p>
               {privacyEnabled
-                ? "Preview simulated privacy workflows through the existing CCC application state."
-                : "Enable Private mode to add the Obscell capability to this application."}
+                ? "Model funding private state (shield) and releasing a note (unshield). Live V1 operation execution remains grant-funded work."
+                : "Initialize the deterministic state fixture, then inspect a simulated shield and unshield lifecycle."}
             </p>
           </div>
           <div className="demo-action-buttons">
@@ -356,7 +326,7 @@ function ApplicationView({
                 onClick={() => onPrivacyModeChange(true)}
                 disabled={busy}
               >
-                <ShieldCheck aria-hidden="true" /> Enable privacy
+                <ShieldCheck aria-hidden="true" /> Initialize local state
               </button>
             ) : (
               <>
@@ -366,15 +336,7 @@ function ApplicationView({
                   onClick={() => onOpenAction("shield")}
                   disabled={busy || snapshot.publicBalance < 100n}
                 >
-                  <EyeOff aria-hidden="true" /> Shield assets
-                </button>
-                <button
-                  className="demo-button demo-button--privacy"
-                  type="button"
-                  onClick={() => onOpenAction("payment")}
-                  disabled={busy || !availableNote}
-                >
-                  <Send aria-hidden="true" /> Send privately
+                  <EyeOff aria-hidden="true" /> Fund private state
                 </button>
                 <button
                   className="demo-button demo-button--quiet"
@@ -382,7 +344,7 @@ function ApplicationView({
                   onClick={() => onOpenAction("unshield")}
                   disabled={busy || !availableNote}
                 >
-                  <ArrowDownToLine aria-hidden="true" /> Unshield
+                  <ArrowDownToLine aria-hidden="true" /> Unshield note
                 </button>
               </>
             )}
@@ -407,14 +369,10 @@ export function PrivacyDemo() {
   const client = clientRef.current;
   const [snapshot, setSnapshot] = useState<DemoPrivacySnapshot>(() => client.getSnapshot());
   const [view, setView] = useState<DemoView>("application");
-  const [consumer, setConsumer] = useState<PrivacyConsumerId>("reference-wallet");
   const [privacyEnabled, setPrivacyEnabled] = useState(false);
   const [privacyEnabling, setPrivacyEnabling] = useState(false);
   const [connection, setConnection] = useState<Connection>({ status: "demo" });
   const [dialog, setDialog] = useState<DemoDialogAction | null>(null);
-  const [recipient, setRecipient] = useState("");
-  const [recipientError, setRecipientError] = useState<string | null>(null);
-  const [recipientValidating, setRecipientValidating] = useState(false);
   const [notice, setNotice] = useState<Notice>({
     tone: "info",
     message: "Local CCC fixture ready. Privacy operations are protocol simulations.",
@@ -425,12 +383,9 @@ export function PrivacyDemo() {
   const operation = useMemo(() => latestOperation(snapshot), [snapshot]);
   const closeDialog = useCallback(() => {
     setDialog(null);
-    setRecipientError(null);
-    setRecipientValidating(false);
   }, []);
 
   const openDialog = (action: DemoDialogAction) => {
-    setRecipientError(null);
     setDialog(action);
   };
 
@@ -468,7 +423,7 @@ export function PrivacyDemo() {
       setPrivacyEnabled(false);
       setNotice({
         tone: "info",
-        message: "Public mode restored. The simulated private note state is preserved locally.",
+        message: "Overview restored. The simulated private note state is preserved locally.",
       });
       return;
     }
@@ -478,7 +433,7 @@ export function PrivacyDemo() {
       setPrivacyEnabled(true);
       setNotice({
         tone: "success",
-        message: "Obscell capability enabled for this CCC application - local simulation.",
+        message: "Local state initialized. This reference application simulates the protocol lifecycle.",
       });
     } catch (error) {
       setNotice({
@@ -491,28 +446,12 @@ export function PrivacyDemo() {
   };
 
   const runOperation = async (action: DemoDialogAction) => {
-    if (action === "payment") {
-      setRecipientValidating(true);
-      try {
-        const { validateCkbRecipientAddress } = await import("./validateRecipient");
-        const validRecipient = await validateCkbRecipientAddress(recipient);
-        if (!validRecipient) {
-          setRecipientError("Enter a valid CKB address for the configured network.");
-          return;
-        }
-      } catch {
-        setRecipientError("CCC address validation is unavailable. Try again after reconnecting.");
-        return;
-      } finally {
-        setRecipientValidating(false);
-      }
-    }
     setDialog(null);
     setNotice({ tone: "info", message: "Preparing local privacy operation..." });
     const note = snapshot.notes.find((candidate) => candidate.status === "available");
     try {
       if (action === "shield") {
-        await client.shield({ poolId: DEFAULT_DEMO_POOL_ID, consumer });
+        await client.shield({ poolId: DEFAULT_DEMO_POOL_ID, consumer: REFERENCE_CONSUMER });
         setNotice({
           tone: "success",
           message: "Shield simulation complete - balances changed locally; no transaction submitted.",
@@ -520,23 +459,9 @@ export function PrivacyDemo() {
         return;
       }
       if (!note) throw new Error("No available simulated private note was found.");
-      if (action === "payment") {
-        await client.unshield({
-          poolId: DEFAULT_DEMO_POOL_ID,
-          consumer,
-          noteId: note.id,
-          recipient,
-          purpose: "recipient-payment",
-        });
-        setNotice({
-          tone: "success",
-          message: "Payment concept prepared to the signing boundary - no transaction submitted.",
-        });
-        return;
-      }
       await client.unshield({
         poolId: DEFAULT_DEMO_POOL_ID,
-        consumer,
+        consumer: REFERENCE_CONSUMER,
         noteId: note.id,
         recipient: connection.status === "live" ? connection.address : "Local CCC fixture account",
         purpose: "return-public",
@@ -557,12 +482,8 @@ export function PrivacyDemo() {
     client.reset();
     setPrivacyEnabled(false);
     setPrivacyEnabling(false);
-    setConsumer("reference-wallet");
     setView("application");
     setDialog(null);
-    setRecipient("");
-    setRecipientError(null);
-    setRecipientValidating(false);
     setNotice({ tone: "info", message: "Demo scenario reset. No chain state was changed." });
   };
 
@@ -575,20 +496,38 @@ export function PrivacyDemo() {
       <main className="demo-main">
         <section className="demo-intro" aria-labelledby="demo-title">
           <div>
-            <span className="demo-kicker">CKB application workbench</span>
-            <h1 id="demo-title">Opt into privacy. Keep CCC.</h1>
+            <span className="demo-kicker">Obscell · Protocol reference implementation</span>
+            <h1 id="demo-title">CKB Privacy Protocol Demo</h1>
             <p>
-              Obscell is represented here as a privacy capability consumed by applications already
-              using CCC for connectivity, signing, transactions, and chain access.
+              Reusable privacy infrastructure, explored through one reference application.
+              Inspect private state, follow a simulated operation, and see how an application integrates the SDK.
             </p>
           </div>
-          <div className="demo-foundation-map" aria-label="CCC and Obscell relationship">
-            <span><Check aria-hidden="true" /> CCC foundation</span>
+          <div className="demo-foundation-map" aria-label="Primary protocol architecture">
+            <span><Smartphone aria-hidden="true" /> Application</span>
             <ArrowRight aria-hidden="true" />
-            <strong><Layers aria-hidden="true" /> Obscell capability</strong>
+            <strong><Braces aria-hidden="true" /> Privacy SDK</strong>
             <ArrowRight aria-hidden="true" />
-            <span><ShieldCheck aria-hidden="true" /> CKB application</span>
+            <span><Layers aria-hidden="true" /> Privacy Core / CKB scripts</span>
           </div>
+        </section>
+
+        <section className="demo-overview-grid" aria-label="Protocol overview and implementation status">
+          <article>
+            <span className="demo-eyebrow">01 · Protocol</span>
+            <h2>Privacy Core</h2>
+            <p>Privacy rules, cryptographic verification and programmable CKB state. The fixed-note pool is its first validation use case.</p>
+          </article>
+          <article>
+            <span className="demo-eyebrow">02 · Developer interface</span>
+            <h2>Privacy SDK</h2>
+            <p>A public TypeScript foundation exists. State sync requires injected indexer and verifier services; live operations are unavailable.</p>
+          </article>
+          <article>
+            <span className="demo-eyebrow">03 · CKB integration</span>
+            <h2>Host-owned CCC</h2>
+            <p>The application supplies its CKB client and signer. CKB scripts and cryptography enforce the target protocol rules.</p>
+          </article>
         </section>
 
         <AudienceTabs view={view} onChange={setView} />
@@ -620,8 +559,6 @@ export function PrivacyDemo() {
           >
             {view === "application" ? (
               <ApplicationView
-                consumer={consumer}
-                onConsumerChange={setConsumer}
                 privacyEnabled={privacyEnabled}
                 privacyEnabling={privacyEnabling}
                 onPrivacyModeChange={changePrivacyMode}
@@ -637,11 +574,7 @@ export function PrivacyDemo() {
                 privateBalance={snapshot.privateBalance}
                 availableNotes={availableNotes}
                 artifacts={snapshot.artifacts}
-                operationKind={
-                  operation?.purpose === "recipient-payment"
-                    ? "recipient payment preview"
-                    : operation?.kind
-                }
+                operationKind={operation?.kind}
                 operationStatus={operation?.status}
               />
             )}
@@ -651,7 +584,8 @@ export function PrivacyDemo() {
         <footer className="demo-footer">
           <p>
             <strong>Demo boundary:</strong> local deterministic state only. The protocol-correct V1
-            must replace this client before privacy operations can be live.
+            must replace this client before privacy operations can be live; corrected-V1 scripts are
+            not deployed.
           </p>
           <div>
             <a href="?view=legacy">
@@ -667,13 +601,6 @@ export function PrivacyDemo() {
       {dialog ? (
         <ActionDialog
           action={dialog}
-          recipient={recipient}
-          recipientBusy={recipientValidating}
-          recipientError={recipientError}
-          onRecipientChange={(value) => {
-            setRecipient(value);
-            setRecipientError(null);
-          }}
           onClose={closeDialog}
           onConfirm={() => runOperation(dialog)}
         />

@@ -50,7 +50,7 @@ scripts/deployment_results.json
 /obscell-grant-proposal.md
 /docs/grant-proposal.*
 /scripts/build-grant-proposal-docx.py
-/Obscell_CKB_Community_DAO_Proposal_*.docx
+/Obscell_CKB_Community_DAO_Proposal*.docx
 
 # Embedded external repo
 obscell-source/

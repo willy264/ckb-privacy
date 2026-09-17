@@ -1,6 +1,8 @@
-# Implementation Report
+# Obscell Privacy Protocol: Implementation Report
 
-**Cutoff:** 2026-09-04 source-level foundation. This is not the final Pudge completion report.
+**Implementation baseline:** 2026-09-04 source-level foundation, with dated follow-up results in [the test report](test-report.md). **Documentation revision:** 2026-09-12. This is not a Pudge or mainnet completion report.
+
+**Obscell Privacy Protocol — CKB Privacy Core and SDK** is one reusable infrastructure project. Privacy Protocol defines validity rules and Privacy Core implements them through cryptography, state handling, and CKB scripts. Applications consume those capabilities through the developer SDK, whose adapter receives the host's CCC Client and operation-scoped Signer. CKB provides settlement and verification. The reference application is the first controlled SDK consumer, not a separately funded wallet product. Its one-asset, fixed-denomination pool is the initial validation use case, not the architectural boundary. Privacy Core is an architectural layer, not a separate package or public class.
 
 ## 1. What Existed Before
 
@@ -9,18 +11,19 @@ The repository contained legacy mixer, CT, Circom/Groth16, encrypted-note, CCC, 
 ## 2. What Changed
 
 - Added an explicit `legacy-demo` boundary without deleting original code.
-- Reframed the README around reusable privacy infrastructure and evidence-based status.
+- Reframed the README around one layered privacy-infrastructure project and evidence-based status.
 - Added corrected-V1 SDK/protocol/circuit, fail-closed CKB covenant, and service foundations with explicit unsupported-live behavior.
 - Added typed service validation for chain state, protected fields, fee isolation, deterministic acceptance, and operation lifecycle.
 - Added architecture, protocol, research, security, proposal, deployment, Pudge, vector, evidence, and test documentation.
+- Revised current documentation around the reusable core/SDK, a five-month implementation and validation plan, and a mainnet target gated by correctness, security review, and deployment readiness. This planning revision does not complete missing protocol transitions.
 
 ## 3. What Was Preserved
 
 The legacy UI/route, generated proving artifacts, contract crates, explicit `mixer-sdk/legacy` package subpath, coordinator/relayer, deployment scripts, encrypted note UX, and progress history remain available. Some legacy source was hardened, but the historical generated proving artifacts were not regenerated or relabeled as corrected V1. The package root exports only corrected-V1 APIs.
 
-## 4. Protocol Changes
+## 4. Protocol And Privacy Core Changes
 
-The target moves authority from coordinator/registry records to singleton PoolState and Vault transitions, with user-owned staging deposits, fixed identity/value, sequence, root history, nullifier state, CT accounting, recipient binding, replay/stale protection, and proof validity enforced atomically. Strict versioned Rust codecs, partial cross-language decoding/validation, and structural PoolState, Vault, and Staging covenants now exist. Pool genesis, acceptance, and withdrawal deliberately return unsupported after structural validation until their cryptographic and CT rules are connected; they are not deployable protocol implementations.
+The target Privacy Core / Protocol moves authority from coordinator/registry records to singleton PoolState and Vault transitions, with user-owned staging deposits, fixed identity/value, sequence, root history, nullifier state, CT accounting, recipient binding, replay/stale protection, and proof validity enforced atomically. This infrastructure spans the versioned circuit, CKB scripts, and protocol/crypto/Merkle/nullifier/note/prover modules. Strict versioned Rust codecs, partial cross-language decoding/validation, and structural PoolState, Vault, and Staging covenants now exist. Pool genesis, acceptance, and withdrawal deliberately return unsupported after structural validation until their cryptographic and CT rules are connected; they are not deployable protocol implementations.
 
 ## 5. Circuit Changes
 
@@ -32,7 +35,7 @@ The conservation model and required tests are specified. CT issuance/transfer/ra
 
 ## 7. SDK Architecture
 
-The public `PrivacyClient` is separated from protocol, crypto, Merkle, note, prover, services, validation, and CCC responsibilities. It receives an injected CCC Client and operation-scoped Signer. Deployment validation binds network identity through genesis hash and chain checks. Sync requires both an indexer and an independent state verifier, then conditionally commits the verified snapshot and note updates through the store's atomic checkpoint compare-and-swap. The included memory store provides only process-local development behavior; a production encrypted persistent store is not included. Unavailable settlement operations fail explicitly rather than fabricating results.
+The public `PrivacyClient` exposes the Privacy Core through separated protocol, crypto, Merkle, note, prover, services, validation, and CCC modules. It receives an application-injected CCC Client and operation-scoped Signer; it does not replace CCC. Deployment validation binds network identity through genesis hash and chain checks. Sync requires both an indexer and an independent state verifier, then conditionally commits the verified snapshot and note updates through the store's atomic checkpoint compare-and-swap. The included memory store provides only process-local development behavior; a production encrypted persistent store is not included. Unavailable settlement operations fail explicitly rather than fabricating results.
 
 ## 8. CCC Integration
 
@@ -48,7 +51,7 @@ An isolated V1 relayer accepts the same strict wire intent emitted by the SDK, r
 
 ## 11. Frontend And Demo
 
-The current default demo and legacy route were preserved. Simulation labels remain mandatory. A standalone `examples/payment-app` workspace now consumes only the public `mixer-sdk` entry point and injects its own CCC-shaped client, state store, indexer, and verifier fixtures; it does not reuse `DemoPrivacyClient` or claim live settlement. Replacing either fixture/demo client with live V1 remains blocked on the Pudge acceptance criteria.
+The current reference application is framed around protocol operations, private-state inspection, operation status, and the SDK integration boundary. Its supported V1 lifecycle remains a deterministic simulation until live protocol integration is implemented and validated. Simulation labels remain mandatory. The historical route is retained as previous implementation context. The `examples/payment-app` workspace is only a local SDK boundary fixture: it consumes the public `mixer-sdk` entry point and injects its own CCC-shaped client, state store, indexer, and verifier fixtures without reusing `DemoPrivacyClient`. It has been retained as useful package-consumption evidence; it supplies no private payment feature or live settlement evidence.
 
 ## 12. Research Documentation
 
@@ -56,11 +59,11 @@ The current default demo and legacy route were preserved. Simulation labels rema
 
 ## 13. Architecture Diagrams
 
-`docs/architecture.md` contains system, deposit, withdrawal, trust-boundary, and SDK diagrams. Six generated original-color raster counterparts under `docs/diagrams/` are embedded in the black-and-white Word proposal and explicitly labeled as target architecture, not deployment evidence. Off-chain services are shown as replaceable rather than authoritative.
+`docs/architecture.md` uses Application -> Privacy SDK -> Privacy Core / CKB scripts as the primary relationship, with application-owned CCC capabilities injected through the SDK adapter for transaction/signing integration. The [SDK integration diagram](diagrams/sdk-integration.png) makes ownership explicit; it does not depict a Core -> CCC implementation stack. The deposit, withdrawal, state, and trust-boundary diagrams explain the bounded reference lifecycle. The Word proposal embeds the system overview and SDK boundary in full color and retains the other diagrams as supporting assets. All are labeled as target architecture, not deployment evidence. Off-chain services and interface hosting have no protocol or consensus authority.
 
 ## 14. Screenshots
 
-Capture scripts and hash-cataloged local reference-demo and separate-consumer captures are cataloged under `docs/evidence/`. Their manifests identify a dirty worktree and are not clean-release attestations. Final Pudge flow Figure 5 remains absent and will not be substituted with concept screens.
+Real captures and their provenance are cataloged under `docs/evidence/`, with previous-interface, current-reference, and local SDK-fixture evidence labeled separately. Capture manifests record source/worktree details; local screenshots are not clean-release attestations or proof of settlement. Corrected-V1 Pudge and mainnet transaction evidence is still missing and cannot be replaced by interface screenshots.
 
 ## 15. Tests
 
@@ -80,7 +83,17 @@ See `docs/known-limitations.md`. The principal blockers are completing authorita
 
 ## 19. Remaining Work
 
-Connect and adversarially test the fail-closed scripts and CT rules, complete independently recomputed cross-language hash/state vectors, benchmark CKB verification and alternatives, generate reviewed artifacts, implement scanner/storage/reorg behavior, wire Pudge-capable non-fixture SDK/services, complete Pudge, prove recipient spend, then move the demo to real execution.
+The five-month / approximately 20-week grant plan is:
+
+| Period | Remaining engineering work |
+|---|---|
+| Month 1 / weeks 1–4 | Finalize Privacy Core architecture, state/cryptographic boundaries, proof-system selection, and cross-component vectors |
+| Month 2 / weeks 5–8 | Complete and adversarially test CKB transitions, CT/proof verification, commitments, roots, and nullifier handling |
+| Month 3 / weeks 9–12 | Complete SDK operations, CCC signing/submission boundaries, non-fixture integration, tests, and developer examples |
+| Month 4 / weeks 13–16 | Connect the reference application, deploy a testnet candidate, verify the full Pudge lifecycle/recipient spend, capture reproducible evidence, and fix integration issues |
+| Month 5 / weeks 17–20 | Resolve integration defects, cryptographic findings, and testnet issues; complete independent review, remediation, deployment preparation, and final release evidence; deploy to mainnet only where gates pass |
+
+Mainnet remains a target, not an achieved or guaranteed launch. It requires passing protocol, cryptographic, adversarial, state-transition, SDK, and real testnet checks; independent review with no unresolved critical or high findings; reproducible release artifacts; complete documentation; and a successful mainnet preflight. If mainnet gates remain unmet, deliver the validated testnet release and documented remediation state instead; any unresolved testnet acceptance remains incomplete. [The deployment guide](deployment.md) defines the precise sequence. Private transfers, additional assets/values, and separate payment or wallet products remain future work.
 
 ## 20. Reproduction
 

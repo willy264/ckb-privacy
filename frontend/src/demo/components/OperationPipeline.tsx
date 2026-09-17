@@ -64,7 +64,7 @@ export function OperationPipeline({
     >
       <div className="demo-section-heading">
         <div>
-          <span className="demo-eyebrow">Transaction pipeline</span>
+          <span className="demo-eyebrow">Operation status · Local simulation</span>
           <h2 id="demo-pipeline-title">{operationLabel(operation)}</h2>
         </div>
         <span className="demo-status-chip demo-status-chip--simulation">Simulation</span>
@@ -85,8 +85,10 @@ export function OperationPipeline({
                   {status === "skipped"
                     ? "Not executed"
                     : status === "ready"
-                      ? "Ready concept"
-                      : status}
+                      ? "Modeled only"
+                      : status === "complete"
+                        ? "Simulated"
+                        : status}
                 </small>
               </span>
             </li>

@@ -1,38 +1,55 @@
-# Obscell
+# Obscell Privacy Protocol
 
-Obscell is an experimental CKB privacy protocol and SDK. Its north-star integration is:
+**CKB Privacy Core and SDK**
+
+Obscell Privacy Protocol is experimental, reusable privacy infrastructure for CKB. The project develops a Privacy Core, exposes it through a developer SDK, and validates it through a reference application:
 
 ```text
-CKB application -> CCC Client + Signer -> Obscell Privacy SDK -> protocol scripts -> CKB
+CKB application / reference application
+    -> Privacy SDK -> Privacy Core / Protocol -> CKB scripts and Cells
+                  -> application-owned CCC -> CKB transactions and signing
 ```
 
-CCC owns connectivity, wallet approval, signing, transaction primitives, RPC, and indexer access. Obscell owns fixed-denomination private notes, commitments, Merkle state, nullifiers, proofs, privacy operation planning, and protocol validation.
+The **Privacy Protocol** defines valid private operations; the **Privacy Core** implements those rules through commitments, notes, Merkle and nullifier state, proof verification, and CKB state transitions. The **Privacy SDK** packages those capabilities for application developers. The application retains its **CCC** client and wallet and supplies a signer only to the operation needing approval, through the SDK's explicit CCC adapter boundary. **CKB** verifies script rules and settles accepted transactions.
+
+The reference application is not a separate product being funded alongside the SDK. It is the first controlled consumer of the Privacy SDK and provides a practical demonstration of the protocol's capabilities. The one-asset, fixed-denomination privacy pool is the first controlled validation use case, not the project's architectural boundary or a separate product.
+
+This is willy264's implementation direction, evolved from the earlier reference prototype and informed by existing Obscell research credited in [the research record](docs/research.md). The implementation repository remains `ckb-privacy-mixer`, and the SDK import remains `mixer-sdk` for compatibility. These historical technical names do not define the public project's scope.
 
 ## Current Status
 
-This repository contains two deliberately separate tracks:
+This repository contains one privacy-infrastructure project whose historical, foundational, and reference artifacts are at different maturity levels:
 
-| Track | State | What it proves |
+| Layer or artifact | State | What it proves |
 |---|---|---|
-| `legacy-demo` | Historical prototype, preserved | Browser proving, encrypted-note recovery, CT experiments, coordinator/relayer mechanics, and CKB transaction construction |
-| Corrected protocol V1 | Fail-closed foundation under implementation | Versioned protocol statement, strict encodings, injected-CCC SDK boundary, structural CKB covenants, and chain-authoritative service interfaces |
-| Default web experience | Interactive simulation | How an existing CCC application can opt into Obscell without changing its wallet foundation |
-| Independent payment example | Deterministic SDK fixture | A separate application imports the public package and injects its own CCC/state boundaries; no live settlement |
+| `legacy-demo` | Historical prototype, preserved | Prior browser proving, encrypted-note recovery, CT experiments, coordinator/relayer mechanics, and CKB transaction construction; it is not corrected-V1 authority |
+| Privacy Core / Protocol | Fail-closed foundation under implementation | Versioned protocol statement, circuit and state rules, strict encodings, structural CKB covenants, and chain-authoritative service interfaces |
+| Privacy SDK and CCC boundary | Foundation under implementation | Public SDK modules accept application-owned CCC and fail explicitly where live privacy operations are unavailable |
+| V1 reference privacy pool | Initial controlled use case, not yet deployed | When complete, it will validate the fixed-denomination protocol and SDK through the required Pudge lifecycle |
+| Reference application | Interactive simulation | Protocol and SDK integration; current privacy actions are simulated |
+| Payment example | Deterministic local SDK fixture | Package separation and injected client/state interfaces only; it is neither a second product nor live settlement evidence |
 | Pudge end-to-end V1 | Not yet demonstrated | No corrected-V1 deployment, recipient CT spend, or Redis rebuild evidence is claimed |
 | Independent security review | Not yet performed | Tests in this repository are not an audit |
+| Mainnet release and deployment | Gated grant target | Requires verified testnet lifecycle, correctness/security acceptance, reviewed reproducible artifacts, and network-specific deployment checks |
 
-The current deployed/prototype flow is not protocol authority for corrected V1. In particular, coordinator or Redis state must not be treated as an authoritative Merkle root, nullifier set, or vault balance.
+The legacy/prototype flow is not protocol authority for corrected V1. In particular, coordinator or Redis state must not be treated as an authoritative Merkle root, nullifier set, or vault balance.
 
 See [implementation status](docs/status.md), [known limitations](docs/known-limitations.md), and the [legacy boundary](legacy-demo/README.md) before evaluating claims.
 
+## Five-Month Delivery Plan
+
+The grant plan spans five months / approximately 20 weeks: core architecture and vectors; protocol and CKB implementation; SDK and CCC integration; reference-application integration with real testnet validation; then hardening and release. Month 5 addresses integration defects, cryptographic findings, testnet issues, independent review, remediation, deployment preparation, and final release evidence.
+
+Mainnet deployment is a release target subject to successful testnet validation, completion of the defined security review, resolution of critical/high-severity findings, reproducible deployment artifacts, and successful mainnet preflight. If mainnet gates remain unmet, deliver the validated testnet release and documented remediation state instead; unresolved testnet acceptance must be reported as incomplete. No corrected-V1 testnet or mainnet deployment has occurred. The complete gates and separate protocol, package, and frontend deployment responsibilities are in [the deployment guide](docs/deployment.md).
+
 ## Repository Map
 
-- `contracts/`: legacy CKB scripts plus versioned corrected-V1 script work.
-- `circuits/`: preserved legacy circuit/artifacts and versioned corrected-V1 circuit sources.
-- `mixer-sdk/`: reusable privacy SDK and CCC adapter; legacy mixer exports are isolated at `mixer-sdk/legacy`.
+- `contracts/`: legacy CKB scripts plus the on-chain part of the corrected-V1 Privacy Protocol/Core foundation.
+- `circuits/`: preserved legacy circuit/artifacts and the proof-system part of the corrected-V1 Privacy Core foundation.
+- `mixer-sdk/`: reusable Privacy SDK, protocol/cryptographic modules, and CCC adapter; legacy mixer exports are isolated at `mixer-sdk/legacy`.
 - `backend/`: legacy coordinator/relayer plus isolated chain-authoritative V1 interfaces.
-- `frontend/`: CCC-oriented reference experience; privacy actions remain visibly simulated.
-- `examples/payment-app/`: independent public-SDK consumer using deterministic local adapters; no live settlement.
+- `frontend/`: protocol/SDK reference application; privacy actions remain visibly simulated.
+- `examples/payment-app/`: local public-SDK boundary fixture using deterministic adapters; it is not a second product or live integration.
 - `tests/`: CKB contract tests.
 - `docs/`: architecture, protocol, SDK, security, test, deployment, and grant evidence.
 - [`progress/`](progress/README.md): dated research and implementation history. These files are evidence of evolution, not current protocol claims or independently re-verified deployment evidence.
@@ -59,15 +76,15 @@ pnpm --filter frontend capture:evidence
 pnpm --filter obscell-payment-example capture:evidence
 ```
 
-The evidence boundary and reserved, currently absent Pudge Figure 5 are documented in [the evidence catalog](docs/evidence/README.md).
+The capture provenance and limits of each real screenshot are documented in [the evidence catalog](docs/evidence/README.md). Interface screenshots do not establish testnet or mainnet settlement.
 
-## Run The Reference Demo
+## Run The Reference Application
 
 ```bash
 pnpm dev
 ```
 
-The default page is the CCC-oriented application concept. Its privacy operations are deterministic local simulations and make no privacy transaction submission. The historical mixer is available at `?view=legacy` and is labeled as a prototype.
+The default page is the Obscell Privacy Protocol reference application. It demonstrates the supported lifecycle and the SDK's intended place in a CKB application. Current privacy operations are deterministic local simulations and make no privacy transaction submission. The historical pool prototype is available at `?view=legacy` and is labeled accordingly.
 
 ## Documentation
 

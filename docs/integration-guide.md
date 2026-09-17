@@ -1,6 +1,8 @@
-# Integrating Obscell Into A CCC Application
+# Integrating Obscell Privacy Protocol Into A CCC Application
 
 This guide demonstrates the architectural boundary available today. It does not claim live corrected-V1 settlement.
+
+The integration path is **Application -> Privacy SDK -> Privacy Core / CKB scripts**. Privacy Protocol defines validity rules and Privacy Core implements them; `PrivacyClient` exposes that infrastructure to developers. The SDK's CCC adapter uses a Client owned by the host application and a Signer supplied only to an operation needing approval. CCC handles transaction construction, signing, submission, and chain interaction; it is not an implementation layer beneath Privacy Core. The Obscell reference application is the first controlled SDK consumer, not a separate wallet product. Its one-asset, fixed-denomination privacy pool is the initial validation use case, not the project's architectural boundary. Other applications can consume the SDK directly when its release and deployment gates pass. The existing `mixer-sdk` import remains unchanged for compatibility.
 
 ## 1. Keep Existing CCC Ownership
 
@@ -25,11 +27,12 @@ const privacy = createPrivacyClient({
   deployment,
   stateStore: new InMemoryPrivacyStateStore(), // development only
   services,
-  prover,
 });
 ```
 
 For a real application, replace the memory store with an authenticated, encrypted-at-rest implementation. Its `commitSync(snapshot, notes, expectedPrevious)` method must atomically compare the stored pool/block/outpoint checkpoint with `expectedPrevious` and commit the snapshot plus all note updates in one storage transaction. This compare-and-swap must work across application instances or processes sharing the database; the SDK's per-client queue does not provide that guarantee. Load `deployment` from a verified versioned manifest, not UI-controlled or untrusted remote JSON.
+
+`CreatePrivacyClientOptions` also accepts an optional `PrivacyProver` as `prover`. Injecting one does not currently make proof generation available through `PrivacyClient`; `localProofGeneration` remains `unavailable` until the corrected-V1 proving workflow is connected and tested.
 
 ## 2. Gate UI With Capabilities
 
@@ -71,16 +74,21 @@ These calls currently fail explicitly because the V1 staging/withdrawal pipeline
 
 ## 5. Keep Wallet/UI Concerns Outside
 
-The application owns JoyID or other connector setup, modals, password prompts, progress UI, notifications, analytics, explorer links, and display formatting. It must never send note secrets, nullifier secrets, plaintext backups, or passwords to services or telemetry.
+The application owns JoyID or other connector setup, modals, password prompts, progress UI, notifications, analytics, explorer links, and display formatting. It must never send note secrets, nullifier secrets, plaintext backups, or passwords to services or telemetry. A web host only serves the interface; CKB and the protocol's cryptographic checks enforce accepted transitions. A compromised frontend can still expose secrets or mislead user approval, so interface integrity and local secret handling remain client risks.
 
-## 6. Second Consumer Test
+## 6. SDK Boundary Fixture
 
-`examples/payment-app` is a minimal separate applicant-authored consumer that imports only the public package entry point and supplies its own CCC-shaped client, transient store, indexer, verifier, and UI. Its deterministic fixture proves package/API separation and zero submission; it is not third-party adoption or live-chain evidence. A valid release must replace those fixtures with real application-owned adapters and exercise the same public API on Pudge. Shared source copied from the reference wallet would not prove reusability.
+`examples/payment-app` is a minimal applicant-authored package-boundary fixture that imports only the public package entry point and supplies its own CCC-shaped client, transient store, indexer, verifier, and UI. Its deterministic behavior proves package/API separation and zero submission; it is not the Obscell reference application, a separately funded product, third-party adoption, or live-chain evidence. This grant retains it as local package-boundary evidence. A future application integration outside this grant would replace the fixtures with real application-owned adapters and exercise the same public API against a validated deployment. Shared source copied from the reference application would not prove reusability.
 
 ## 7. Before Enabling Live Controls
 
-- Manifest network/address prefix, pool Type-ID, CT script hash, domains, circuit hashes, and cell deps validate.
-- Cross-language vectors and all builds/tests pass.
-- The exact Pudge runbook passes, including recipient subsequent spend.
-- Independent review status and unresolved findings are visible.
+Use isolated testnet controls only after the implementation and testnet preflight in [the deployment guide](deployment.md) pass. Public mainnet controls additionally require:
+
+- Manifest network/address prefix, genesis identity, pool Type-ID, CT script hash, domains, circuit hashes, and cell deps validate for that network.
+- Protocol, cryptographic, cross-language, adversarial, state-transition, and SDK integration tests pass.
+- The exact Pudge runbook passes, including recipient subsequent spend and service rebuild.
+- Independent review is complete, with no unresolved critical or high security findings; residual limitations are documented.
+- Release artifacts are reproducible and developer, recovery, and deployment documentation is complete.
 - Capability discovery reports the operation as supported from verified adapters, not an environment flag alone.
+
+The five-month / approximately 20-week grant targets this progression from testnet to a validated mainnet-ready release and gated mainnet deployment. Month 5 addresses integration defects, cryptographic findings, testnet issues, independent review, remediation, deployment preparation, and final release evidence. If mainnet gates remain unmet, deliver the validated testnet release and documented remediation state instead; do not label unresolved testnet acceptance as validated. Presently, no corrected-V1 deployment exists and live privacy capabilities remain unavailable.

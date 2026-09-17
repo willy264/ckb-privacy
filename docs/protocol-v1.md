@@ -1,10 +1,12 @@
-# Corrected Protocol V1
+# Obscell Privacy Protocol: Corrected V1
 
-**Status:** Normative design and source-level foundation. No V1 deployment or independent review exists yet. Deployment is forbidden until every gate in this document is implemented and tested.
+**Status:** Normative design and source-level foundation. No corrected-V1 testnet/mainnet deployment or independent review exists yet. Testnet deployment and mainnet release have separate gates below; source-level foundations alone are not deployable.
 
 ## Scope
 
-V1 supports one CT asset and one fixed denomination per pool, one commitment per staging cell, one-note withdrawal, one recipient CT output, depth-20 Merkle membership, and optional fee-only relaying. Arbitrary values, private-to-private transfer, join-split, shielded change, and advanced stealth are outside V1.
+Privacy Protocol defines the validity rules specified here; Privacy Core implements them through privacy primitives, state handling, cryptographic verification, and CKB scripts. Applications consume those capabilities through the Privacy SDK, whose CCC adapter uses an application-owned Client and operation-scoped Signer. CKB enforces the scripts and settles valid state transitions. The reference application is the first controlled SDK consumer, not a separate wallet product. Its fixed-denomination privacy pool validates commitments, Merkle state, nullifiers, proof authorization, CT conservation, and CKB state transitions; the pool itself is not the architectural boundary of the project.
+
+The target V1 operation set is one CT asset and one fixed denomination per pool, one commitment per staging cell, one-note withdrawal, one recipient CT output, depth-20 Merkle membership, and optional fee-only relaying. Arbitrary values, private-to-private transfer, join-split, shielded change, and advanced stealth are outside V1. These are protocol design requirements; the unfinished genesis, acceptance, and withdrawal implementations currently reject execution.
 
 ## Identities
 
@@ -199,13 +201,29 @@ The verifier accepts exactly nine canonical Fr inputs and one versioned proof. E
 
 Clients and services distinguish `queued`, `validated`, `submitted`, and `committed`. Only canonical chain observation can produce `committed`. The deployment chooses a confirmation depth. Index checkpoints include block number and hash; a mismatch rolls state, notes, and operations back to the common ancestor and replays canonical events.
 
-## Deployment Gates
+## Testnet Candidate Gates
+
+Before a corrected-V1 testnet candidate is deployed, the implementation MUST pass:
 
 1. Molecule code generation and Rust/TypeScript round-trip vectors.
-2. Complete PoolState, Vault, staging/refund, proof, nullifier, and CT scripts.
-3. Cross-language domain/action/Merkle/proof vectors.
-4. Complete mutation and CT-inflation tests.
+2. Complete PoolState, Vault, staging/refund, proof, nullifier, and CT script tests, including successful state transitions.
+3. Cross-language domain/action/Merkle/proof vectors and cryptographic verification tests.
+4. Mutation, replay, stale-state, recipient-binding, and CT-inflation tests.
 5. Corrected-workload proof-system benchmark and documented selection.
 6. Reproducible circuit setup/artifact hashes and verifier generation.
-7. Independent review findings triaged.
-8. Full Pudge runbook including recipient spend and Redis rebuild.
+7. Non-fixture SDK/CCC/services integration and a verified testnet manifest with fresh deployment identities.
+
+The testnet candidate then runs the [Pudge acceptance procedure](pudge-runbook.md), including recipient spend, adversarial scenarios, and Redis rebuild. A testnet candidate is not a mainnet release.
+
+## Mainnet Release And Deployment Gates
+
+The five-month / approximately 20-week plan targets a working testnet implementation, validated mainnet-ready release, and mainnet deployment when acceptance and security gates pass. Mainnet deployment MUST remain blocked until:
+
+1. Protocol, cryptographic, adversarial, cross-component, state-transition, and SDK integration tests pass against the release candidate.
+2. The full Pudge runbook has independently inspectable transaction/cell evidence, including recipient subsequent spend, replay rejection, stale-state handling, reorganization recovery, and service rebuild.
+3. Independent review of the circuit, CKB scripts, CT integration, and security-sensitive SDK boundaries is complete, with no unresolved critical or high security findings. Other findings and limitations are disclosed.
+4. Release binaries, proof artifacts, manifests, test vectors, and their hashes are reproducible from pinned sources and tools.
+5. Protocol, SDK, deployment, recovery, and operational documentation is complete.
+6. A separate mainnet preflight verifies genesis/network identity, dependencies, code hashes, Type-IDs, CT configuration, capacity requirements, signer authority, and fresh initial state.
+
+The fifth month provides the required hardening and release window for issues discovered during real testnet integration, independent review, and deployment preparation. It includes integration defects, cryptographic findings, testnet issues, remediation, and final release evidence. If mainnet gates remain unmet, deliver the validated testnet release and documented remediation state instead. A testnet candidate whose own acceptance checks remain unresolved MUST be reported as incomplete, not validated. Schedule pressure does not authorize bypassing a gate. No gate has been declared complete by this documentation revision. [Deployment details](deployment.md) distinguish scripts, SDK publication, and interface hosting.

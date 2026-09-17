@@ -8,7 +8,6 @@ import { fileURLToPath } from "node:url";
 
 import { chromium } from "playwright";
 import { preview } from "vite";
-import { ccc } from "@ckb-ccc/core";
 
 const frontendRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repositoryRoot = path.resolve(frontendRoot, "..");
@@ -17,14 +16,6 @@ const screenshotDirectory = configuredScreenshotDirectory
   ? path.resolve(repositoryRoot, configuredScreenshotDirectory)
   : os.tmpdir();
 fs.mkdirSync(screenshotDirectory, { recursive: true });
-const testRecipient = ccc.Address.from({
-  prefix: "ckt",
-  script: {
-    codeHash: `0x${"00".repeat(32)}`,
-    hashType: "type",
-    args: `0x${"11".repeat(20)}`,
-  },
-}).toString();
 
 async function launchBrowser() {
   const requestedChannel = process.env.PLAYWRIGHT_CHANNEL;
@@ -103,8 +94,14 @@ try {
   });
 
   await page.goto(baseUrl, { waitUntil: "networkidle", timeout: 60_000 });
-  await page.getByRole("heading", { name: "Opt into privacy. Keep CCC." }).waitFor();
-  assert.match(await page.locator("body").innerText(), /privacy operations are protocol simulations/i);
+  await page.getByRole("heading", { name: "CKB Privacy Protocol Demo" }).waitFor();
+  const initialText = await page.locator("body").innerText();
+  assert.match(initialText, /privacy operations are protocol simulations/i);
+  assert.match(initialText, /one reference application/i);
+  assert.match(initialText, /Privacy Core/);
+  assert.match(initialText, /Host-owned CCC/);
+  assert.equal(await page.getByRole("button", { name: "Send privately" }).count(), 0);
+  assert.equal(await page.getByRole("button", { name: "SDK Fixture" }).count(), 0);
   await page.screenshot({
     path: path.join(screenshotDirectory, "figure-2-ccc-demo.png"),
     fullPage: true,
@@ -115,12 +112,12 @@ try {
   );
   assert.ok(overflow <= 1, `Desktop page overflows horizontally by ${overflow}px`);
 
-  await page.getByRole("button", { name: "Enable privacy" }).click();
-  await page.getByText(/Obscell capability enabled for this CCC application/).waitFor();
+  await page.getByRole("button", { name: "Initialize local state" }).click();
+  await page.getByText(/Local state initialized/).waitFor();
 
   recordPrivacyNetwork = true;
-  await page.getByRole("button", { name: "Shield assets" }).click();
-  await page.getByRole("dialog", { name: "Shield assets" }).waitFor();
+  await page.getByRole("button", { name: "Fund private state" }).click();
+  await page.getByRole("dialog", { name: "Fund private state" }).waitFor();
   await page.getByRole("button", { name: "Run shield simulation" }).click();
   await page.getByText(/Shield simulation complete/).waitFor({ timeout: 10_000 });
 
@@ -132,28 +129,14 @@ try {
     fullPage: true,
   });
 
-  await page.getByRole("button", { name: "Payment App" }).click();
-  await page.getByRole("heading", { name: "CKB Payment App" }).waitFor();
-  assert.match(await balanceValues.nth(1).innerText(), /^100\s+CT$/);
-
-  await page.getByRole("button", { name: "Send privately" }).click();
-  await page.getByLabel("Recipient CKB address").fill("not-a-ckb-address");
-  await page.getByRole("button", { name: "Prepare payment concept" }).click();
-  await page.getByText(/Enter a valid CKB address/).waitFor();
-  await page.getByLabel("Recipient CKB address").fill(testRecipient);
-  await page.getByRole("button", { name: "Prepare payment concept" }).click();
-  await page.getByText(/Payment concept prepared to the signing boundary/).waitFor({ timeout: 10_000 });
-  assert.match(await balanceValues.nth(0).innerText(), /^0\s+CT$/);
-  assert.match(await balanceValues.nth(1).innerText(), /^100\s+CT$/);
-
-  await page.getByRole("button", { name: "Public" }).click();
-  await page.getByText(/Public mode restored/).waitFor();
-  await page.getByRole("button", { name: "Private" }).click();
-  await page.getByText(/Obscell capability enabled for this CCC application/).waitFor();
+  await page.getByRole("button", { name: "Overview", exact: true }).click();
+  await page.getByText(/Overview restored/).waitFor();
+  await page.getByRole("button", { name: "Inspect state" }).click();
+  await page.getByText(/Local state initialized/).waitFor();
   assert.match(await balanceValues.nth(1).innerText(), /^100\s+CT$/);
 
   await page.getByRole("tab", { name: "Protocol View" }).click();
-  await page.getByRole("heading", { name: "Target protocol V1" }).waitFor();
+  await page.getByRole("heading", { name: "Protocol state and verification" }).waitFor();
   const protocolText = await page.locator(".demo-protocol-view").innerText();
   assert.match(protocolText, /not live chain state/i);
   assert.match(protocolText, /0x\*{8}/);
@@ -169,16 +152,21 @@ try {
   });
 
   await page.getByRole("tab", { name: "Developer View" }).click();
-  await page.getByRole("heading", { name: /Add privacy to an application already using CCC/ }).waitFor();
-  assert.match(await page.locator(".demo-developer-view").innerText(), /V1 SDK foundation/);
-  assert.match(await page.locator(".demo-code-content").innerText(), /createPrivacyClient/);
+  await page.getByRole("heading", { name: "Use the protocol through the Privacy SDK" }).waitFor();
+  const developerText = await page.locator(".demo-developer-view").innerText();
+  assert.match(developerText, /Existing foundation API/);
+  assert.match(developerText, /State sync and balance inspection work with injected verification services/);
+  assert.match(developerText, /Live shield, refund, unshield, proof generation and transaction construction are unavailable/);
+  assert.match(developerText, /separate deterministic simulation client/);
+  assert.match(developerText, /scripts are not deployed/);
+  assert.match(await page.locator(".demo-code-content").innerText(), /UnsupportedOperationError/);
   await page.screenshot({
     path: path.join(screenshotDirectory, "obscell-demo-verified-developer.png"),
     fullPage: true,
   });
 
   await page.getByRole("button", { name: "Application view" }).click();
-  await page.getByRole("button", { name: "Unshield" }).click();
+  await page.getByRole("button", { name: "Unshield note" }).click();
   await page.getByRole("button", { name: "Run unshield simulation" }).click();
   await page.getByText(/Unshield simulation complete/).waitFor({ timeout: 10_000 });
   assert.match(await balanceValues.nth(0).innerText(), /^100\s+CT$/);
@@ -218,10 +206,10 @@ try {
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
   assert.ok(mobileOverflow <= 1, `Mobile page overflows horizontally by ${mobileOverflow}px`);
-  await mobile.getByRole("button", { name: "Enable privacy" }).click();
-  await mobile.getByText(/Obscell capability enabled for this CCC application/).waitFor();
-  await mobile.getByRole("button", { name: "Shield assets" }).click();
-  const mobileDialog = mobile.getByRole("dialog", { name: "Shield assets" });
+  await mobile.getByRole("button", { name: "Initialize local state" }).click();
+  await mobile.getByText(/Local state initialized/).waitFor();
+  await mobile.getByRole("button", { name: "Fund private state" }).click();
+  const mobileDialog = mobile.getByRole("dialog", { name: "Fund private state" });
   const dialogBox = await mobileDialog.boundingBox();
   assert.ok(dialogBox && dialogBox.x >= 0 && dialogBox.width <= 390, "Mobile dialog is out of bounds");
   await mobile.getByRole("button", { name: "Close dialog" }).click();
@@ -240,10 +228,13 @@ try {
     legacyText,
     /Maximum \(Relay\)|withdrawal is anonymous|Latest deposits|Anonymity set/i,
   );
-  await legacy.screenshot({
-    path: path.join(screenshotDirectory, "figure-1-legacy-mixer.png"),
-    fullPage: true,
-  });
+  // Preserve the repository's historical screenshot; remote evidence has its own capture.
+  if (!configuredScreenshotDirectory) {
+    await legacy.screenshot({
+      path: path.join(screenshotDirectory, "figure-1-legacy-mixer.png"),
+      fullPage: true,
+    });
+  }
 
   const legacyHonestySource = [
     "src/components/StatsSidebar.tsx",
@@ -255,7 +246,6 @@ try {
   assert.doesNotMatch(legacyHonestySource, /Math\.random|Maximum \(Relay\)|is anonymous/i);
 
   const screenshotPaths = [
-    path.join(screenshotDirectory, "figure-1-legacy-mixer.png"),
     path.join(screenshotDirectory, "figure-2-ccc-demo.png"),
     path.join(screenshotDirectory, "figure-3-private-balance.png"),
     path.join(screenshotDirectory, "figure-4-developer-protocol.png"),
@@ -269,13 +259,11 @@ try {
     status: "passed",
     browser: { channel: browserChannel, version: browser.version() },
     interactions: [
-      "privacy opt-in",
+      "protocol-oriented reference application",
+      "local state initialization",
       "shield",
-      "shared payment-app mockup state",
-      "CCC recipient validation",
-      "payment preview",
       "mode persistence",
-      "developer view",
+      "developer foundation-API honesty boundary",
       "protocol view",
       "unshield",
       "reset",
@@ -311,8 +299,8 @@ try {
         legacy: { width: 1280, height: 720 },
       },
       networkRequestsDuringPrivacyOperations: privacyNetworkRequests.length,
-      figure5: "absent-until-corrected-v1-pudge-e2e-passes",
-      figure6: "captured-separately-by-examples/payment-app-browser-verifier",
+      chainEvidence: "none; current privacy operations use local deterministic state",
+      supplementarySdkFixture: "figure-6-second-consumer.png; captured separately by the SDK fixture verifier",
       files: screenshotPaths.map((filePath) => ({
         name: path.basename(filePath),
         bytes: fs.statSync(filePath).size,

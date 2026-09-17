@@ -117,11 +117,11 @@ export function ProtocolView({
         <div className="demo-view-heading">
           <span className="demo-eyebrow">Protocol view</span>
           <h1 id="demo-protocol-title" className="demo-view-title">
-            Target protocol V1
+            Protocol state and verification
           </h1>
           <p className="demo-view-summary">
-            A transparent view of the state transitions the production protocol must enforce beneath
-            the application abstraction.
+            Inspect the first fixed-note reference use case of the reusable Privacy Core. These are
+            the state transitions that CKB scripts and cryptographic verification must enforce.
           </p>
         </div>
         <div className="demo-target-badge" role="status">
@@ -173,10 +173,10 @@ export function ProtocolView({
           <Boxes className="demo-section-icon" aria-hidden="true" />
           <div className="demo-section-heading-copy">
             <h2 id="demo-protocol-path-title" className="demo-section-title">
-              Fixed-note asset path
+              V1 reference lifecycle
             </h2>
             <p className="demo-section-description">
-              The target V1 path binds accepted privacy state to the CT asset it later releases.
+              The reference pool validates the core protocol: accepted private state must be bound to the CT asset it later releases.
             </p>
           </div>
         </div>
@@ -262,8 +262,8 @@ export function ProtocolView({
           <article className="demo-boundary-column">
             <h3 className="demo-boundary-heading">Demonstrated here</h3>
             <ul className="demo-boundary-list">
-              <li className="demo-boundary-item">CCC-compatible privacy-module experience</li>
-              <li className="demo-boundary-item">Opt-in public and private application modes</li>
+              <li className="demo-boundary-item">A reference application organized around the protocol SDK</li>
+              <li className="demo-boundary-item">Local initialization and private-state inspection</li>
               <li className="demo-boundary-item">Fixed-note balance and operation abstraction</li>
               <li className="demo-boundary-item">Masked protocol-state visualization</li>
             </ul>
