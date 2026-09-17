@@ -1,0 +1,7 @@
+# Preserve hashed SVG sources and capture tooling across Windows checkouts.
+docs/diagrams/*.svg text eol=lf
+frontend/scripts/capture-proposal-evidence.mjs text eol=lf
+frontend/scripts/export-architecture-diagrams.mjs text eol=lf
+
+# Historical evidence is archived byte-for-byte, including JSON metadata.
+docs/evidence/history/** -text

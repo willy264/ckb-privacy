@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-17T12:54:48.533Z",
+  "classification": "Authored target architecture; not deployment evidence",
+  "renderer": "frontend/scripts/export-architecture-diagrams.mjs",
+  "playwrightVersion": "1.55.1",
+  "browser": {
+    "channel": "chrome",
+    "version": "152.0.7977.83"
+  },
+  "background": "#ffffff",
+  "deviceScaleFactor": 1,
+  "diagrams": [
+    {
+      "source": "system-architecture.svg",
+      "sourceSha256": "8c92bbc01414025264dccb912baf4e9eed3fd8f4d30e6ff94ba5b544a23670c3",
+      "file": "system-architecture.png",
+      "sha256": "dbc08c41c8340820d28c70d96f0abcc1e3376880cefcb1f69540e8511d549d72",
+      "width": 1600,
+      "height": 1180
+    },
+    {
+      "source": "sdk-integration.svg",
+      "sourceSha256": "6ee5279284943a9c51adfde9ed50d3713041a8a8531e620d7c6105cfa96e554e",
+      "file": "sdk-integration.png",
+      "sha256": "9271e4f83ad62cc6946013bf5c10f144ce05a74930c7a1de03e275dd5bc4d57e",
+      "width": 1600,
+      "height": 1100
+    }
+  ]
+}
