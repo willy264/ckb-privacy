@@ -122,8 +122,8 @@ importers:
         specifier: ^20.0.0
         version: 20.19.39
       playwright:
-        specifier: 1.55.0
-        version: 1.55.0
+        specifier: 1.55.1
+        version: 1.55.1
       tsx:
         specifier: 4.22.1
         version: 4.22.1
@@ -131,11 +131,11 @@ importers:
         specifier: ^5.0.2
         version: 5.9.3
       vite:
-        specifier: ^4.4.5
-        version: 4.5.14(@types/node@20.19.39)
+        specifier: ^6.4.3
+        version: 6.4.3(@types/node@20.19.39)(jiti@1.21.7)(tsx@4.22.1)
       vite-plugin-node-polyfills:
         specifier: ^0.26.0
-        version: 0.26.0(rollup@4.60.2)(vite@4.5.14(@types/node@20.19.39))
+        version: 0.26.0(rollup@4.62.5)(vite@6.4.3(@types/node@20.19.39)(jiti@1.21.7)(tsx@4.22.1))
 
   frontend:
     dependencies:
@@ -1478,9 +1478,6 @@ packages:
   circomlib@2.0.5:
     resolution: {integrity: sha512-O7NQ8OS+J4eshBuoy36z/TwQU0YHw8W3zxZcs4hVwpEll3e4hDm3mgkIPqItN8FDeLEKZFK3YeT/+k8TiLF3/A==}
 
-  circomlib@2.0.5:
-    resolution: {integrity: sha512-O7NQ8OS+J4eshBuoy36z/TwQU0YHw8W3zxZcs4hVwpEll3e4hDm3mgkIPqItN8FDeLEKZFK3YeT/+k8TiLF3/A==}
-
   circomlibjs@0.1.7:
     resolution: {integrity: sha512-GRAUoAlKAsiiTa+PA725G9RmEmJJRc8tRFxw/zKktUxlQISGznT4hH4ESvW8FNTsrGg/nNd06sGP/Wlx0LUHVg==}
 
@@ -2775,10 +2772,6 @@ packages:
   timers-browserify@2.0.12:
     resolution: {integrity: sha512-9phl76Cqm6FhSX9Xe1ZUAMLtm1BLkKj2Qd5ApyWkXzsMRaA7dgr81kf4wJmQf/hAvg8EEyJxDo3du/0KlhPiKQ==}
     engines: {node: '>=0.6.0'}
-
-  tinyglobby@0.2.16:
-    resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
-    engines: {node: '>=12.0.0'}
 
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
@@ -4636,8 +4629,6 @@ snapshots:
 
   circomlib@2.0.5: {}
 
-  circomlib@2.0.5: {}
-
   circomlibjs@0.1.7:
     dependencies:
       blake-hash: 2.0.0
@@ -6143,7 +6134,7 @@ snapshots:
       lines-and-columns: 1.2.4
       mz: 2.7.0
       pirates: 4.0.7
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       ts-interface-checker: 0.1.13
 
   supports-color@10.2.2: {}
@@ -6191,11 +6182,6 @@ snapshots:
   timers-browserify@2.0.12:
     dependencies:
       setimmediate: 1.0.5
-
-  tinyglobby@0.2.16:
-    dependencies:
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
 
   tinyglobby@0.2.17:
     dependencies:
@@ -6318,36 +6304,44 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-plugin-node-polyfills@0.26.0(rollup@4.60.2)(vite@4.5.14(@types/node@20.19.39)):
-    dependencies:
-      '@rollup/plugin-inject': 5.0.5(rollup@4.60.2)
-      node-stdlib-browser: 1.3.1
-      vite: 4.5.14(@types/node@20.19.39)
-    transitivePeerDependencies:
-      - rollup
-
-  vite-plugin-node-polyfills@0.26.0(rollup@4.60.2)(vite@4.5.14(@types/node@22.7.5)):
+  vite-plugin-node-polyfills@0.26.0(rollup@4.62.5)(vite@6.4.3(@types/node@20.19.39)(jiti@1.21.7)(tsx@4.22.1)):
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@4.62.5)
       node-stdlib-browser: 1.3.1
-      vite: 4.5.14(@types/node@22.7.5)
+      vite: 6.4.3(@types/node@20.19.39)(jiti@1.21.7)(tsx@4.22.1)
     transitivePeerDependencies:
       - rollup
 
-  vite@4.5.14(@types/node@20.19.39):
+  vite-plugin-node-polyfills@0.26.0(rollup@4.62.5)(vite@6.4.3(@types/node@22.7.5)(jiti@1.21.7)(tsx@4.22.1)):
     dependencies:
-      esbuild: 0.18.20
-      postcss: 8.5.10
-      rollup: 3.30.0
+      '@rollup/plugin-inject': 5.0.5(rollup@4.62.5)
+      node-stdlib-browser: 1.3.1
+      vite: 6.4.3(@types/node@22.7.5)(jiti@1.21.7)(tsx@4.22.1)
+    transitivePeerDependencies:
+      - rollup
+
+  vite@6.4.3(@types/node@20.19.39)(jiti@1.21.7)(tsx@4.22.1):
+    dependencies:
+      esbuild: 0.25.12
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
+      postcss: 8.5.26
+      rollup: 4.62.5
+      tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 20.19.39
       fsevents: 2.3.3
+      jiti: 1.21.7
+      tsx: 4.22.1
 
-  vite@4.5.14(@types/node@22.7.5):
+  vite@6.4.3(@types/node@22.7.5)(jiti@1.21.7)(tsx@4.22.1):
     dependencies:
-      esbuild: 0.18.20
-      postcss: 8.5.10
-      rollup: 3.30.0
+      esbuild: 0.25.12
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
+      postcss: 8.5.26
+      rollup: 4.62.5
+      tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 22.7.5
       fsevents: 2.3.3
