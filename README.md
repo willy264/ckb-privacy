@@ -1,4 +1,4 @@
-# Obscell
+.# Obscell
 
 Obscell is an experimental CKB privacy protocol and SDK. Its north-star integration is:
 
