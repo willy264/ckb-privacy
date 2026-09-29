@@ -1,0 +1,158 @@
+import type { LocalWithdrawalProofResult } from '../utils/proof.js';
+import type { DepositNote } from './note.js';
+import type {
+    ContractReference,
+    MixerRuntimeConfig,
+    RuntimeMode,
+    WithdrawalAuthorityMode,
+} from './config.js';
+import type { WithdrawalPublicInputs } from './proof.js';
+
+export interface WithdrawalResolution {
+    config: Partial<MixerRuntimeConfig>;
+    registryCell: NullifierRegistryCell;
+    proof: LocalWithdrawalProofResult;
+}
+
+export interface LiveWithdrawalProvider {
+    resolveWithdrawal(note: DepositNote): Promise<WithdrawalResolution>;
+    submitWithdrawal?(tx: WithdrawalTransaction, privateKey?: string): Promise<string>;
+}
+
+export interface NullifierRegistryCell {
+    outPoint: string;
+    nullifiers: string[];
+    lock?: string;
+    capacity?: string;
+    typeArgs?: string;
+}
+
+export interface WithdrawalContractRefs {
+    nullifierType: ContractReference | string;
+    zkMembershipType: ContractReference | string;
+    ctTokenType: ContractReference | string;
+}
+
+export interface WithdrawalInput {
+    previousOutput: string;
+    role: 'nullifier_registry';
+}
+
+export interface WithdrawalOutput {
+    kind: 'nullifier_registry' | 'zk_membership' | 'withdrawal';
+    lock: string;
+    type?: ContractReference | string;
+    capacity: string;
+    data?: string;
+    nullifiers?: string[];
+    amount?: string;
+}
+
+export interface WithdrawalWitness {
+    outputType: string;
+}
+
+export interface WithdrawalCellDep {
+    contract: ContractReference | string;
+}
+
+export interface CkbOutPoint {
+    txHash: string;
+    index: string;
+}
+
+export interface CkbScript {
+    codeHash: string;
+    hashType: 'data' | 'data1' | 'type';
+    args: string;
+}
+
+export interface CkbCellDep {
+    outPoint: CkbOutPoint;
+    depType: 'code' | 'depGroup';
+}
+
+export interface CkbInput {
+    previousOutput: CkbOutPoint;
+    since: string;
+}
+
+export interface CkbOutput {
+    capacity: string;
+    lock: CkbScript;
+    type?: CkbScript;
+}
+
+export interface CkbTransaction {
+    version: string;
+    cellDeps: CkbCellDep[];
+    headerDeps: string[];
+    inputs: CkbInput[];
+    outputs: CkbOutput[];
+    outputsData: string[];
+    witnesses: string[];
+    hash?: string;
+}
+
+export interface JoyIdSigningRequest {
+    transaction: CkbTransaction;
+    witnessIndexes: number[];
+    signerAddress: string;
+}
+
+export interface WithdrawalSubmissionContext {
+    runtimeMode: RuntimeMode;
+    authorityMode: WithdrawalAuthorityMode;
+    requiresOperatorRegistrySigner: boolean;
+}
+
+export interface WithdrawalRawTransaction {
+    version: '0x0';
+    cellDeps: WithdrawalCellDep[];
+    headerDeps: string[];
+    inputs: Array<{
+        previousOutput: string;
+        since: '0x0';
+    }>;
+    outputs: Array<{
+        capacity: string;
+        lock: string;
+        type?: ContractReference | string;
+    }>;
+    outputsData: string[];
+    witnesses: string[];
+}
+
+export interface WithdrawalTransaction {
+    rawTransaction: WithdrawalRawTransaction;
+    inputs: WithdrawalInput[];
+    outputs: WithdrawalOutput[];
+    witnesses: WithdrawalWitness[];
+    cellDeps: WithdrawalCellDep[];
+    publicInputs: WithdrawalPublicInputs;
+    publicInputsHex: string;
+    serializedWitnessHex: string;
+    nullifier: string;
+    updatedRegistry: string[];
+    isSigned: boolean;
+    signature?: string;
+    submission: WithdrawalSubmissionContext;
+}
+
+export interface LiveWithdrawalBuildParams {
+    note: DepositNote;
+    registryCell: NullifierRegistryCell;
+    proof: LocalWithdrawalProofResult;
+    privateKey?: string;
+    contracts?: Partial<WithdrawalContractRefs>;
+    denomination?: bigint;
+    recipientLock?: string;
+}
+
+export interface LiveWithdrawalExecuteParams {
+    provider: LiveWithdrawalProvider;
+    privateKey?: string;
+    contracts?: Partial<WithdrawalContractRefs>;
+    denomination?: bigint;
+    recipientLock?: string;
+}

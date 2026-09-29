@@ -1,0 +1,38 @@
+{
+  "schema": "obscell-hosted-reference-evidence-v1",
+  "project": "Obscell Privacy Protocol",
+  "requestedAtUtc": "2026-09-10T00:06:07.464Z",
+  "command": "node frontend/scripts/capture-hosted-reference.mjs",
+  "sourceUrl": "https://ckb-privacy-mixer-v1-frontend.vercel.app/",
+  "evidenceMode": "historical-hosted-interface-only",
+  "evidenceLimit": "A screenshot of the previous hosted V1 interface. This capture does not verify CKB deployment, a transaction, balances, cryptographic correctness, or security.",
+  "walletConnected": false,
+  "transactionSubmissions": 0,
+  "interaction": "Opened the public URL in a fresh browser context; no buttons clicked and no wallet used. Non-GET/HEAD requests blocked.",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "captureRepositoryCommit": "ee603f7fc7f57a6656246244b96b106e3feea800",
+  "captureWorkingTree": "dirty",
+  "hostedSourceCommit": "unknown; the hosting interface does not establish its source revision",
+  "browser": {
+    "channel": "chrome",
+    "version": "152.0.7977.83"
+  },
+  "capturedAtUtc": "2026-09-10T00:06:15.112Z",
+  "finalUrl": "https://ckb-privacy-mixer-v1-frontend.vercel.app/",
+  "httpStatus": 200,
+  "pageTitle": "SpectraMix - Privacy Mixer",
+  "visibleHeadings": [
+    "Statistics"
+  ],
+  "status": "captured",
+  "screenshot": {
+    "name": "previous-hosted-reference.png",
+    "bytes": 117318,
+    "sha256": "39f57e3fd7af7f32280716fef79fa48cab1eb3bb7dc7a70b368968249d1d8e99"
+  },
+  "blockedNonReadRequests": [],
+  "pageErrors": []
+}

@@ -1,0 +1,32 @@
+{
+  "name": "previous-hosted-reference.png",
+  "description": "Actual SpectraMix historical interface. Displayed badges, balances and privacy claims are unverified interface text.",
+  "capturedAtUtc": "2026-09-17T13:09:10.784Z",
+  "sourceType": "historical-hosted-interface",
+  "sourceUrl": "https://ckb-privacy-mixer-v1-frontend.vercel.app/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "dimensions": {
+    "width": 1440,
+    "height": 900
+  },
+  "bytes": 114848,
+  "sha256": "5b44c0feeee6b4a3c5b20068c66d13305d8bdd602a81bf930aec0997adf692ac",
+  "requestedUrl": "https://ckb-privacy-mixer-v1-frontend.vercel.app/",
+  "httpStatus": 200,
+  "hostedFailure": null,
+  "pageErrors": [],
+  "sourceRevision": "unknown deployed revision",
+  "command": "node frontend/scripts/capture-proposal-evidence.mjs",
+  "browser": {
+    "channel": "chrome",
+    "version": "152.0.7977.83"
+  },
+  "walletConnected": false,
+  "transactionSubmissions": 0,
+  "captureRepositoryCommit": "ee603f7fc7f57a6656246244b96b106e3feea800",
+  "captureWorkingTree": "dirty",
+  "evidenceLimit": "Interface only: no deployment, balances, transactions or security claims are independently verified."
+}

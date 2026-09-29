@@ -1,0 +1,29 @@
+{
+  "name": "ccc-incognito-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.32.1",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter frontend dev",
+    "build": "pnpm --filter @ckb-ccc/stealth build && pnpm --filter frontend build",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:stealth": "pnpm --filter @ckb-ccc/stealth build",
+    "test:stealth": "pnpm --filter @ckb-ccc/stealth test",
+    "test:backend:v1": "pnpm --filter ckb-mixer-backend test:v1",
+    "test:circuits": "pnpm --filter circuits test",
+    "test:consumer": "pnpm --filter obscell-payment-example test",
+    "test": "pnpm run test:stealth && pnpm --filter frontend test:demo",
+    "build:legacy": "pnpm --filter mixer-sdk build && pnpm --filter ckb-mixer-backend build && pnpm --filter obscell-payment-example build",
+    "test:legacy": "pnpm --filter mixer-sdk test && pnpm run test:backend:v1 && pnpm run test:circuits && pnpm run test:consumer",
+    "dev:consumer": "pnpm --filter obscell-payment-example dev",
+    "preview": "pnpm --filter frontend preview",
+    "capture:evidence": "pnpm --filter frontend capture:evidence",
+    "build:contracts": "node scripts/run-contract-tests.mjs --build-only",
+    "test:contracts": "node scripts/run-contract-tests.mjs"
+  },
+  "dependencies": {
+    "@ckb-ccc/core": "^1.12.5",
+    "dotenv": "^16.6.1"
+  }
+}

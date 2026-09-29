@@ -1,0 +1,76 @@
+{
+  "archivedAtUtc": "2026-09-17T13:09:11.016Z",
+  "purpose": "Preserve pre-capture files and original provenance; archive date is not their capture date.",
+  "files": [
+    {
+      "name": "figure-1-legacy-mixer.png",
+      "bytes": 93788,
+      "sha256": "395ec0505fdf1992493857abfc8345ed124bf077fb30792148d060efac427c45"
+    },
+    {
+      "name": "figure-2-ccc-demo.png",
+      "bytes": 129223,
+      "sha256": "4d69c120ff7e76be32182d96fdc6f0cd90a3bc8a41bb01d67ddd1fe9efda0e0b"
+    },
+    {
+      "name": "figure-3-private-balance.png",
+      "bytes": 132991,
+      "sha256": "6b0d1f6cd40b1ca2ca07364eebee4c42c69342bb282da774ff6178686fd5d000"
+    },
+    {
+      "name": "figure-4-developer-protocol.png",
+      "bytes": 167925,
+      "sha256": "b2f07783de620146ef155780e30989f602d223253b9cbaad26e5f67c99986531"
+    },
+    {
+      "name": "figure-6-second-consumer.json",
+      "bytes": 625,
+      "sha256": "0447995d6e79923615fa7d6ab04f2dfbb8f8b434ac56558ec1705e357e2be2ee"
+    },
+    {
+      "name": "figure-6-second-consumer.png",
+      "bytes": 53912,
+      "sha256": "21979bc8c682eb0632cafc224caee06056123c41df8d9d22044862f2bb421009"
+    },
+    {
+      "name": "manifest.json",
+      "bytes": 2179,
+      "sha256": "5e38ecab88d8b01528e33a9b340142cdb7e16044ad998ba8d08727ca885781d4"
+    },
+    {
+      "name": "obscell-demo-verified-desktop.png",
+      "bytes": 128835,
+      "sha256": "e7f9fee1c89ecd4cea4ea2ef15db1590582de1c26c754f17b788e9fae7c1654e"
+    },
+    {
+      "name": "obscell-demo-verified-developer.png",
+      "bytes": 214632,
+      "sha256": "0c3e9dc531e047563582350cc6645a37ceb7e95980b69593a43adcc084480f2d"
+    },
+    {
+      "name": "obscell-demo-verified-mobile.png",
+      "bytes": 115781,
+      "sha256": "9acc75274b8f86c2f35b9e1937f3788feabcab926a9608994a383ca9641461b7"
+    },
+    {
+      "name": "obscell-demo-verified-presentation.png",
+      "bytes": 126677,
+      "sha256": "49aa900fa6f94f774891bd863613c607724cb22419eb57fcf061415fdad80b9b"
+    },
+    {
+      "name": "obscell-demo-verified-protocol.png",
+      "bytes": 167925,
+      "sha256": "b2f07783de620146ef155780e30989f602d223253b9cbaad26e5f67c99986531"
+    },
+    {
+      "name": "previous-hosted-reference.json",
+      "bytes": 1523,
+      "sha256": "3e3ae37df74f5011cfb56fee4fcf1c97e05749f4e110708ad988715d39e86383"
+    },
+    {
+      "name": "previous-hosted-reference.png",
+      "bytes": 117318,
+      "sha256": "39f57e3fd7af7f32280716fef79fa48cab1eb3bb7dc7a70b368968249d1d8e99"
+    }
+  ]
+}
