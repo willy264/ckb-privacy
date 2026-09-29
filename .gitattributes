@@ -1,0 +1,3 @@
+# Preserve hashed SVG sources and capture tooling across Windows checkouts.
+docs/diagrams/*.svg text eol=lf
+examples/incognito/scripts/*.mjs text eol=lf

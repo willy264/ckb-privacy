@@ -1,0 +1,34 @@
+{
+  "name": "@ccc-incognito/demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite --open --port 3007",
+    "predev": "pnpm --filter @ckb-ccc/stealth build",
+    "prebuild": "pnpm --filter @ckb-ccc/stealth build",
+    "build": "tsc && vite build",
+    "typecheck": "tsc --noEmit",
+    "test:demo": "pnpm build && pnpm test:demo:browser",
+    "capture:evidence": "pnpm build && node scripts/capture-incognito-evidence.mjs",
+    "diagram:export": "node scripts/export-incognito-architecture.mjs",
+    "test:demo:browser": "node scripts/capture-incognito-evidence.mjs --check",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ckb-ccc/core": "^1.12.5",
+    "@ckb-ccc/stealth": "workspace:*",
+    "lucide-react": "^0.279.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "playwright": "1.55.1",
+    "typescript": "^5.0.2",
+    "vite": "^6.4.3"
+  }
+}
