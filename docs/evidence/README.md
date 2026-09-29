@@ -1,56 +1,38 @@
-# Evidence Catalog
+# CCC incognito demo evidence
 
-This directory separates rendered product/integration evidence from blockchain evidence. A screenshot is never enough to prove transaction settlement, protocol correctness, or security.
+These are genuine screenshots of the running local CCC stealth-address demo. All funding, chain scanning, transaction completion, signing and settlement are **SIMULATED**. Local ECDH derivation, view-key matching and unsigned CCC output construction are real computations. No wallet is connected and no transaction is signed or submitted. Public fixture keys must never receive assets.
 
-## Evidence classes
+Amounts and sender inputs are **not hidden**. Receiver unlinkability and fresh change do not defeat timing, network, amount or transaction-graph correlation.
 
-| Class | Meaning |
-|---|---|
-| **HISTORICAL** | Preserved earlier implementation or interface; useful as prior-work evidence, not corrected-V1 authority |
-| **SIMULATION** | Deterministic local UX/integration behavior; no live privacy settlement is implied |
-| **LOCAL TEST** | Behavior exercised by source-controlled tests in a stated environment |
-| **TESTNET EVIDENCE** | Actual CKB execution with reproducible commands, transaction/cell data, block context, decoded transitions, and confirmations |
-| **INDEPENDENT REVIEW** | A named external review with a disclosed scope, findings, and disposition |
+## Figure catalog
 
-Figures 1-4 were captured by `pnpm --filter frontend capture:evidence`. Figure 6 was captured separately by `pnpm --filter obscell-payment-example capture:evidence`. Their machine-readable metadata is in [`manifest.json`](manifest.json) and [`figure-6-second-consumer.json`](figure-6-second-consumer.json).
-
-## Figure register
-
-| Figure | File / state | Class | Source and recorded version | What it demonstrates | What it does **not** demonstrate |
+| Figure | File and meaning | Capture / generation time (UTC) | Source | Viewport → PNG pixels | SHA-256 |
 |---|---|---|---|---|---|
-| **1 - Previous prototype** | [`figure-1-legacy-mixer.png`](figure-1-legacy-mixer.png) | HISTORICAL + local capture | `frontend/scripts/verify-demo.mjs`, legacy route; recorded commit `73d85a8f9b7330dbeb265dba281ff1bb3c218dcb`, dirty worktree, 2026-09-04 | The earlier mixer interface and preserved starting point | Corrected protocol, authoritative roots, live settlement, or production security |
-| **2 - Current CCC demo** | [`figure-2-ccc-demo.png`](figure-2-ccc-demo.png) | SIMULATION | Current reference application; same recorded commit/capture run | Privacy opt-in, CCC/application ownership boundary, persistent simulation labels | A shield transaction, signer use, proof execution, or chain confirmation |
-| **3 - Private-balance flow** | [`figure-3-private-balance.png`](figure-3-private-balance.png) | SIMULATION | Deterministic `DemoPrivacyClient`; same recorded commit/capture run | The intended shield/private-note/private-balance interaction and stage labels | A real balance, accepted commitment, proof, transaction, or anonymity property |
-| **4 - Protocol view** | [`figure-4-developer-protocol.png`](figure-4-developer-protocol.png) | SIMULATION / design visualization | Target protocol view; same recorded commit/capture run | User CT -> Staging -> PoolState/Vault -> proof/nullifier -> recipient CT design and explicit non-chain boundary | Deployed cells, a valid state transition, proof verification, or recipient payout |
-| **5 - Corrected-V1 Pudge E2E** | **Intentionally absent** | TESTNET EVIDENCE pending | Must be produced only by the completed [`pudge-runbook.md`](../pudge-runbook.md) at a clean release commit | When added, it must accompany real staging, acceptance, withdrawal, decoded deltas, recipient CT, and recipient subsequent-spend evidence | A mockup, fixture, isolated hash, or mempool response can never satisfy this figure |
-| **6 - Separate consumer** | [`figure-6-second-consumer.png`](figure-6-second-consumer.png) | SIMULATION / LOCAL TEST | `examples/payment-app/scripts/verify-example.mjs`; recorded commit `73d85a8f9b7330dbeb265dba281ff1bb3c218dcb`, dirty worktree, 2026-09-04 | A separate applicant-authored workspace imports the public `mixer-sdk` entry point and injects its own fixture client/store/indexer/verifier; verifier records zero fetch/XHR data requests and zero submissions | Third-party adoption, a live CCC adapter, deployed protocol, private payment, or chain settlement |
+| 1 | [Architecture](../diagrams/ccc-incognito-architecture.png) — authored target design, not deployment evidence | 2026-09-29T15:54:10.977Z | [SVG](../diagrams/ccc-incognito-architecture.svg) | 1600 × 1100 | `9547668d0073e3b065aed57dca0c2ca5ff8cf40c59855e22fd563c22585734f0` |
+| 2 | [incognito-overview.png](incognito-overview.png) — Incognito toggle OFF: normal CCC send, scope banner and disclosure panel. SIMULATED target flow. | 2026-09-29T16:03:51.781Z | http://127.0.0.1:49933/ | 1440 × 1000 → 1440 × 1640 | `831ff44cae921ea87e8d2dcf737908cbe90ec24239d9e17e57512b9ced67636f` |
+| 3 | [incognito-send.png](incognito-send.png) — Incognito ON: locally derived one-time address and ephemeral public key, actual unsigned CCC output, SIMULATED completion/signing and fresh change. | 2026-09-29T16:03:53.029Z | http://127.0.0.1:49933/ | 1440 × 1000 → 1440 × 1884 | `0beb342da8f7b8bebdf73fe993ffee5876d6a5f19035a915fd6f0751a0155e48` |
+| 4 | [incognito-receive.png](incognito-receive.png) — View-key scan of two public local fixtures: one detected incoming payment, one nonmatching output, Spend simulation action. No chain scan. | 2026-09-29T16:03:54.020Z | http://127.0.0.1:49933/ | 1440 × 1000 → 1440 × 1640 | `6ad07c819f9b3d07941b9de95bf53de5731acff394de2305d78465d97dfc64eb` |
+| 5 | [incognito-disclosure.png](incognito-disclosure.png) — Disclosure of recipient unlinkability limits: amounts, sender inputs, ephemeral key, timing/network exposure and fresh-change caveats. SIMULATED target flow. | 2026-09-29T16:03:54.945Z | http://127.0.0.1:49933/ | 1440 × 1000 → 1440 × 1319 | `b3bcd507025dd8e7081aa4ed95b441300a75f495b8bc3c17fba5ea6d3a4981a2` |
 
-## Captures
+## Reproduce
 
-![Historical original mixer prototype](figure-1-legacy-mixer.png)
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+pnpm diagram:export
+pnpm capture:evidence
+```
 
-*Figure 1. Previous Obscell prototype, preserved as historical/reference evidence and not presented as corrected V1.*
+The [Playwright script](../../examples/incognito/scripts/capture-incognito-evidence.mjs) starts and closes its own Vite preview server. It uses real UI controls, checks malformed inputs, mode switching, fresh addresses, nonmatching scan keys, spend simulation and 390px layout. `pnpm test:demo` runs the browser assertions without replacing evidence. External/write requests are blocked and any attempt fails verification. Captures are taken at 1440 × 1000; full-page PNG heights vary. Nothing is injected into the UI or edited into the PNGs.
 
-![CCC-oriented Obscell simulation](figure-2-ccc-demo.png)
+[Capture manifest](incognito-manifest.json) records the browser (chrome 153.0.8010.53), Playwright, Node, source URL, source/build fingerprints, base commit, dates, sizes and hashes. The base commit alone does not identify uncommitted source edits. Browser fonts and random one-time keys can change pixel hashes across runs. The dynamic localhost port is provenance, not a public service. [Diagram metadata](../diagrams/ccc-incognito-architecture.json) records authored artwork separately.
 
-*Figure 2. Current application-facing demo with its local simulation boundary visible.*
+These artifacts establish interface behavior and local computations, not a verified deployment, live testnet lifecycle, audit, published package or accepted CCC contribution. Live lock-specific signing and indexer scanning remain pending. Funding terms are maintained in the local canonical proposal.
 
-![Simulated private balance](figure-3-private-balance.png)
+## Source relocation
 
-*Figure 3. Deterministic local privacy opt-in and private-balance state; no transaction was submitted.*
+The figures above were captured before the repository restructuring. Their original PNGs, dates, hashes, and JSON metadata are unchanged. Source paths beginning with `frontend/` in the capture manifest refer to the source at capture time, recorded in commit `099c6ad`; the active example and its capture tools now live in `examples/incognito/`. Package internals have also been reorganized since that capture. The old fingerprints must not be interpreted as hashes of the current source or build. The commands above create a new capture from the current checkout and preserve prior files under ignored `.local/history/captures/`. Earlier committed versions remain in Git history.
 
-![Corrected V1 protocol view](figure-4-developer-protocol.png)
+## Prior evidence
 
-*Figure 4. Target corrected-V1 protocol visualization; it is not live chain state.*
-
-> **Figure 5 is intentionally absent pending verified corrected-V1 Pudge E2E evidence.**
-
-![Separate PrivacyClient consumer](figure-6-second-consumer.png)
-
-*Figure 6. Standalone payment example consuming the public `PrivacyClient` with injected fixture adapters; zero transactions are submitted.*
-
-## Integrity and provenance
-
-Together, the two JSON manifests record browser version, capture time, command, byte length, SHA-256, network/submission counts, Git commit, and dirty-worktree status; the reference-demo manifest also records its viewport. The Figure 6 capture script fixes desktop/mobile viewports even though its manifest does not contain a separate viewport key. The current PNG byte lengths and hashes match those manifests. These local manifests are useful drift checks, but they are not externally anchored attestations and must not be described as tamper-proof provenance.
-
-Before a grant release, recapture from a clean, immutable release commit and publish the commit ID plus CI/run links. Figure 5 additionally requires the transaction/cell evidence, decoded state transitions, block hashes/heights, confirmation policy, tool versions, and artifact hashes defined by the Pudge runbook. No private keys, note secrets, nullifier secrets, passwords, or plaintext backups may appear in evidence.
+Earlier captures and their catalogs remain in [Git history](../history.md). They are outside the current review tree and are not figures for this proposal.

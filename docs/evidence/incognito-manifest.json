@@ -1,0 +1,153 @@
+{
+  "schema": "ccc-incognito-evidence-v1",
+  "capturedAtUtc": "2026-09-29T16:03:55.285Z",
+  "command": "pnpm capture:evidence",
+  "baseCommit": "1c076907ee8fd12677e4f82a7396d30ba5834aaf",
+  "workingTree": "dirty",
+  "sourceFingerprint": [
+    {
+      "file": "frontend/dist/assets/index-CiJJ9QCS.css",
+      "sha256": "30de1671b33a0a68ea56840af3353acfd4641f3a8e70c461972e77434e425ac0"
+    },
+    {
+      "file": "frontend/dist/assets/index-Cy8PUFLS.js",
+      "sha256": "ff3ad7637e856534b96812748c7545af923828fcc431afd956ad31e3da0e882b"
+    },
+    {
+      "file": "frontend/dist/index.html",
+      "sha256": "be6cb54cdb6ddc7f06cd3f39abba082f4d9908e115d1c5fdf78a8f78a68bc34b"
+    },
+    {
+      "file": "frontend/package.json",
+      "sha256": "471a303e93e667c0bfb1f95ef50afbbd9b2a93ba6ffe726068cb9649cb8d975d"
+    },
+    {
+      "file": "frontend/scripts/capture-incognito-evidence.mjs",
+      "sha256": "8aea678b53a2d3b33cd8b3d0633d4157a0a982a700c7f49e1e9dc867b439e191"
+    },
+    {
+      "file": "frontend/src/App.tsx",
+      "sha256": "00a31f7ad1a5f83da761dc7e9eae0f134af7beb7bf56b02f8799ccfcf50ecfb3"
+    },
+    {
+      "file": "frontend/src/index.css",
+      "sha256": "073d390f047d3084b4a5b7e422383054bc5a1876b9ea0cc0a4b93c61dfeda623"
+    },
+    {
+      "file": "frontend/src/main.tsx",
+      "sha256": "73c4e0aa94725379c5766cd8be6af297ddf3d8fd4423fa3821302bb1b2813f90"
+    },
+    {
+      "file": "frontend/src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "file": "frontend/vite.config.ts",
+      "sha256": "53fd02d71d44517e63dc09af4d36c09a464c440d9a631fc83c5377ac58ee9139"
+    },
+    {
+      "file": "packages/stealth/package.json",
+      "sha256": "95144524f897a5cd5eda9902ea0ffdf903990fdfec54620fed5dd24f8e3c0066"
+    },
+    {
+      "file": "packages/stealth/src/index.ts",
+      "sha256": "858ed10fd2d109b28afc630e70edf3eebe84d88a33ca78e586da3e28c9330e92"
+    },
+    {
+      "file": "pnpm-lock.yaml",
+      "sha256": "99f2b53eff3b6be5170c875225c496d99aa1c9571bd6854f0655d2480de7cc64"
+    }
+  ],
+  "sourceFingerprintSha256": "033bd298bc0be2df8552eb936254f8248324324e15de7f23294a3146eecba088",
+  "browser": {
+    "channel": "chrome",
+    "version": "153.0.8010.53"
+  },
+  "playwright": "1.55.1",
+  "node": "v25.8.1",
+  "sourceUrl": "http://127.0.0.1:49933/",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "deviceScaleFactor": 1,
+  "simulation": true,
+  "pageErrors": [],
+  "dataRequests": [],
+  "blockedRequests": [],
+  "walletConnected": false,
+  "signatures": 0,
+  "broadcasts": 0,
+  "chainEvidence": "None. Local fixtures only.",
+  "captureIntegrity": "Actual UI controls, no page mocks, DOM replacement, fake chain identifiers or edited pixels.",
+  "files": [
+    {
+      "name": "incognito-overview.png",
+      "description": "Incognito toggle OFF: normal CCC send, scope banner and disclosure panel. SIMULATED target flow.",
+      "capturedAtUtc": "2026-09-29T16:03:51.781Z",
+      "sourceUrl": "http://127.0.0.1:49933/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1640
+      },
+      "sha256": "831ff44cae921ea87e8d2dcf737908cbe90ec24239d9e17e57512b9ced67636f",
+      "bytes": 141047
+    },
+    {
+      "name": "incognito-send.png",
+      "description": "Incognito ON: locally derived one-time address and ephemeral public key, actual unsigned CCC output, SIMULATED completion/signing and fresh change.",
+      "capturedAtUtc": "2026-09-29T16:03:53.029Z",
+      "sourceUrl": "http://127.0.0.1:49933/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1884
+      },
+      "sha256": "0beb342da8f7b8bebdf73fe993ffee5876d6a5f19035a915fd6f0751a0155e48",
+      "bytes": 211347
+    },
+    {
+      "name": "incognito-receive.png",
+      "description": "View-key scan of two public local fixtures: one detected incoming payment, one nonmatching output, Spend simulation action. No chain scan.",
+      "capturedAtUtc": "2026-09-29T16:03:54.020Z",
+      "sourceUrl": "http://127.0.0.1:49933/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1640
+      },
+      "sha256": "6ad07c819f9b3d07941b9de95bf53de5731acff394de2305d78465d97dfc64eb",
+      "bytes": 180618
+    },
+    {
+      "name": "incognito-disclosure.png",
+      "description": "Disclosure of recipient unlinkability limits: amounts, sender inputs, ephemeral key, timing/network exposure and fresh-change caveats. SIMULATED target flow.",
+      "capturedAtUtc": "2026-09-29T16:03:54.945Z",
+      "sourceUrl": "http://127.0.0.1:49933/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1319
+      },
+      "sha256": "b3bcd507025dd8e7081aa4ed95b441300a75f495b8bc3c17fba5ea6d3a4981a2",
+      "bytes": 147243
+    }
+  ]
+}
