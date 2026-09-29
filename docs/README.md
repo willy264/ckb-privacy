@@ -1,26 +1,29 @@
-# Obscell Privacy Protocol Documentation
+# CCC Incognito Mode Documentation
 
-**CKB Privacy Core and SDK.** These documents describe one reusable privacy protocol for CKB. Privacy Protocol defines the validity rules, and Privacy Core implements them through cryptography, state handling, and CKB scripts. Applications consume those capabilities through the Privacy SDK and inject their own CCC Client and operation-scoped Signer through its CCC adapter. CKB provides settlement and verification. The reference application is the first controlled SDK consumer, not a separately funded wallet product. Its fixed-denomination privacy pool is the initial validation use case, not the project's architectural boundary.
+The current project is one opt-in CCC package, working name `@ckb-ccc/stealth`, for stealth send, scan, and spend plus fresh-change handling. It targets a contribution to CCC, reusing the Obscell stealth lock rather than creating new on-chain machinery.
 
-The public project name is **Obscell Privacy Protocol**. The implementation repository `ckb-privacy-mixer` and package import `mixer-sdk` remain unchanged for compatibility. The five-month / approximately 20-week plan targets a working testnet implementation, validated mainnet-ready release, and mainnet deployment where correctness, security, and deployment gates pass; current implementation and evidence gaps remain explicit.
+The runnable interface is **SIMULATED**. Local address derivation and CCC draft construction are implementation evidence; fixture detection, transaction completion, signing, and settlement must not be presented as real chain activity. Amounts and sender inputs are **not hidden**.
 
 | Document | Purpose |
 |---|---|
-| [Status](status.md) | Evidence-based implementation matrix |
-| [Architecture](architecture.md) | Application, SDK, Privacy Core / Protocol, CCC integration, and CKB verification boundaries |
-| [Proposal diagram assets](diagrams/README.md) | Rendered target diagrams embedded in the Word proposal |
-| [Protocol V1](protocol-v1.md) | Consensus statement and state-machine specification |
-| [Research](research.md) | Architecture evolution, alternatives, and decisions |
-| [Threat model](threat-model.md) | Assets, actors, threats, mitigations, and assumptions |
-| [SDK](sdk.md) | Public API and module responsibilities |
-| [Integration guide](integration-guide.md) | Add Obscell to an existing CCC application |
-| [Pudge runbook](pudge-runbook.md) | Reproducible testnet acceptance procedure |
-| [Deployment](deployment.md) | Testnet validation, gated mainnet target, SDK publication, frontend hosting, and manifest rules |
-| [Test vectors](test-vectors.md) | Cross-language vector contract |
-| [Test report](test-report.md) | Commands and results actually executed |
-| [Known limitations](known-limitations.md) | Current blockers and out-of-scope work |
-| Grant proposal | Maintained locally; funding details are not tracked in this repository |
-| [Implementation report](implementation-report.md) | Before/after account and remaining work |
-| [Screenshot evidence](evidence/README.md) | Historical, reference-application, protocol-view, and local-fixture captures with explicit evidence limits |
+| [Status](status.md) | Implemented local behavior and unfinished live integration |
+| [Architecture](architecture.md) | App, optional CCC package, existing CCC capabilities, reused lock |
+| [Package guide](sdk.md) | Package boundary and local API |
+| [Integration guide](integration-guide.md) | Send, scan, spend, and application-owned approval |
+| [Research](research.md) | Reuse decisions, attribution, and compatibility questions |
+| [Threat model](threat-model.md) | Receiver privacy, keys, transaction graph, and interface risks |
+| [Security assumptions](security/security-assumptions.md) | Preconditions and limits |
+| [Trust model](security/trust-model.md) | Chain, application, signer, and scanner roles |
+| [Security invariants](security/protocol-invariants.md) | Rules to preserve through integration |
+| [Attack surface](security/attack-surface.md) | Input, scanning, signing, and delivery boundaries |
+| [Test report](test-report.md) | Current checks and their evidence limits |
+| [Test vectors](test-vectors.md) | Codec, derivation, recognition, and mutation coverage |
+| [Deployment](deployment.md) | Local hosting, testnet acceptance, and upstream path |
+| [Testnet runbook](pudge-runbook.md) | Future real send → scan → spend verification |
+| [Known limitations](known-limitations.md) | Explicit implementation and privacy gaps |
+| [Implementation report](implementation-report.md) | How the repository changed direction |
+| [Evidence catalog](evidence/README.md) | Real captures, simulation labels, dates, and hashes |
+| [Architecture assets](diagrams/README.md) | Target diagrams and reproducible sources |
+| [Historical documentation](archive/pre-incognito/README.md) | Superseded research, specifications, and dated results |
 
-Normative language (`MUST`, `MUST NOT`, `SHOULD`) is used only in the protocol and deployment specifications. Dated progress reports under `progress/` remain historical records and may describe superseded designs.
+The old [versioned specification](protocol-v1.md) remains a historical pointer. Dated `progress/` files and archived evidence are preserved as history. Their terminology, results, milestones, and deployments are not current claims. Funding materials are intentionally excluded from tracked public documentation.

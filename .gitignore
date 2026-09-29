@@ -47,6 +47,8 @@ vendor/
 scripts/deployment_results.json
 
 # Grant proposal materials containing funding amounts
+/ccc-incognito-mode-proposal.*
+/docs/ccc-incognito-mode-proposal.*
 /obscell-grant-proposal.md
 /docs/grant-proposal.*
 /scripts/build-grant-proposal-docx.py

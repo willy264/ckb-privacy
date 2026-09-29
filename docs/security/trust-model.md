@@ -1,24 +1,11 @@
-# Trust Model
+# Incognito Trust Model
 
-## Trusted For Correctness
+The application controls its CCC client, network, wallet, and operation approval. The optional stealth package supplies address and ownership helpers; it must not silently take over those choices.
 
-- CKB consensus and canonical-chain selection.
-- The exact deployed V1 script binaries and circuit verifying key whose hashes match the reviewed manifest.
-- Correct cryptographic assumptions for Poseidon, BN254/Groth16 if selected, Blake2b/CKB hashing, CT commitments, and range proofs.
-- User-controlled execution environment for generating and encrypting note secrets.
+CKB consensus and the exact reused stealth-lock binary decide whether a real transaction is accepted. Source-level derivation or an unsigned draft is not sufficient evidence of authorization.
 
-## Not Trusted For Protocol Authority
+A client/indexer can omit records, lag, return malformed data, or show stale cells. Its observations must be checked against canonical-chain context and live-cell status before spending. A recognized fixture remains a fixture.
 
-- Coordinator: may omit, reorder, delay, or propose invalid staging acceptance; scripts must reject invalid plans.
-- Relayer: may censor, delay, overcharge, mutate, or submit stale requests; intent and scripts bind protected fields.
-- Indexer/RPC: may lie or lag; clients require canonical block/transaction confirmation and can change providers.
-- Redis/database: may be deleted or corrupted; it stores operational state only.
-- Reference frontend: convenience software, not consensus. Advanced users must be able to validate artifacts and transactions independently.
+The receiver's view key is trusted for local recognition and must remain confidential if payment history is to remain private. Spending secrets are separately sensitive and must not be entrusted to public services or frontend telemetry. Public demo keys intentionally provide no secrecy.
 
-## User Responsibilities
-
-Users must protect encrypted note backups and passwords, verify the intended recipient/network/pool in wallet approval, and avoid treating `submitted` as `committed`. Loss of both note secrets and recovery state can make funds unrecoverable. Disclosure of secrets can allow theft.
-
-## Service Compromise Outcomes
-
-With correct scripts, service compromise may cause censorship, timing leakage, denial of service, duplicate work, or bad UX. It must not create an accepted commitment, mark a nullifier spent without payout, change the recipient, mint Vault value, or authorize withdrawal. These claims remain design goals until on-chain tests pass.
+The web host delivers code and can compromise the user environment; it has no consensus authority. Wallet approval must reflect the actual final transaction. Amounts, sender inputs, fees, and the transaction graph are public even when one-time addresses are used.

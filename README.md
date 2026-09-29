@@ -1,104 +1,56 @@
-# Obscell Privacy Protocol
+# CCC Incognito Mode
 
-**CKB Privacy Core and SDK**
+An opt-in stealth-address capability for CCC applications, with the working package name `@ckb-ccc/stealth`. A CCC application can demonstrate a normal send or an incognito send, derive a one-time receiving address, scan supplied payment records, and prepare a local spending plan while keeping CCC's transaction and signer flow.
 
-Obscell Privacy Protocol is experimental, reusable privacy infrastructure for CKB. The project develops a Privacy Core, exposes it through a developer SDK, and validates it through a reference application:
+The intended contribution belongs in the CCC monorepo. The local package is a private implementation candidate for that upstream path; its name does not claim publication, CCC endorsement, an opened upstream pull request, or a merge.
 
-```text
-CKB application / reference application
-    -> Privacy SDK -> Privacy Core / Protocol -> CKB scripts and Cells
-                  -> application-owned CCC -> CKB transactions and signing
-```
+**Privacy scope:** one-time addresses aim to hide the link to the recipient's published identity. Amounts and sender inputs remain public. Timing, network, and amount correlation remain possible. Fresh change avoids reusing an address but does not hide the change amount or transaction graph.
 
-The **Privacy Protocol** defines valid private operations; the **Privacy Core** implements those rules through commitments, notes, Merkle and nullifier state, proof verification, and CKB state transitions. The **Privacy SDK** packages those capabilities for application developers. The application retains its **CCC** client and wallet and supplies a signer only to the operation needing approval, through the SDK's explicit CCC adapter boundary. **CKB** verifies script rules and settles accepted transactions.
+## What runs today
 
-The reference application is not a separate product being funded alongside the SDK. It is the first controlled consumer of the Privacy SDK and provides a practical demonstration of the protocol's capabilities. The one-asset, fixed-denomination privacy pool is the first controlled validation use case, not the project's architectural boundary or a separate product.
+`frontend/` is a clearly labeled **SIMULATED** demonstration. It derives addresses locally and builds a CCC send draft, but does not connect a funded wallet, call a live chain scanner, sign, broadcast, or display invented settlement data. Incoming payments are explicitly marked fixtures. Spend preparation checks local authority and derives destination/change addresses; it does not construct a spendable transaction input.
 
-This is willy264's implementation direction, evolved from the earlier reference prototype and informed by existing Obscell research credited in [the research record](docs/research.md). The implementation repository remains `ckb-privacy-mixer`, and the SDK import remains `mixer-sdk` for compatibility. These historical technical names do not define the public project's scope.
+`packages/stealth/` contains the new package candidate: strict meta-address encoding, ECDH one-time-address derivation, supplied-record detection, local spend preparation, and fresh-change helpers. See [package documentation](packages/stealth/README.md) for the precise API and limits.
 
-## Current Status
+The target reuses the existing [Obscell stealth lock](https://github.com/quake/obscell), with credit to its contract and wallet authors. This repository's local demo does not independently establish that deployment or demonstrate a CCC testnet send → scan → spend. Compatibility with the exact deployed lock, live scanning, signing, and testnet evidence remain validation work. See [current status](docs/status.md).
 
-This repository contains one privacy-infrastructure project whose historical, foundational, and reference artifacts are at different maturity levels:
+## Run and verify
 
-| Layer or artifact | State | What it proves |
-|---|---|---|
-| `legacy-demo` | Historical prototype, preserved | Prior browser proving, encrypted-note recovery, CT experiments, coordinator/relayer mechanics, and CKB transaction construction; it is not corrected-V1 authority |
-| Privacy Core / Protocol | Fail-closed foundation under implementation | Versioned protocol statement, circuit and state rules, strict encodings, structural CKB covenants, and chain-authoritative service interfaces |
-| Privacy SDK and CCC boundary | Foundation under implementation | Public SDK modules accept application-owned CCC and fail explicitly where live privacy operations are unavailable |
-| V1 reference privacy pool | Initial controlled use case, not yet deployed | When complete, it will validate the fixed-denomination protocol and SDK through the required Pudge lifecycle |
-| Reference application | Interactive simulation | Protocol and SDK integration; current privacy actions are simulated |
-| Payment example | Deterministic local SDK fixture | Package separation and injected client/state interfaces only; it is neither a second product nor live settlement evidence |
-| Pudge end-to-end V1 | Not yet demonstrated | No corrected-V1 deployment, recipient CT spend, or Redis rebuild evidence is claimed |
-| Independent security review | Not yet performed | Tests in this repository are not an audit |
-| Mainnet release and deployment | Gated grant target | Requires verified testnet lifecycle, correctness/security acceptance, reviewed reproducible artifacts, and network-specific deployment checks |
+Use the Node and PNPM versions recorded by the repository configuration.
 
-The legacy/prototype flow is not protocol authority for corrected V1. In particular, coordinator or Redis state must not be treated as an authoritative Merkle root, nullifier set, or vault balance.
-
-See [implementation status](docs/status.md), [known limitations](docs/known-limitations.md), and the [legacy boundary](legacy-demo/README.md) before evaluating claims.
-
-## Five-Month Delivery Plan
-
-The grant plan spans five months / approximately 20 weeks: core architecture and vectors; protocol and CKB implementation; SDK and CCC integration; reference-application integration with real testnet validation; then hardening and release. Month 5 addresses integration defects, cryptographic findings, testnet issues, independent review, remediation, deployment preparation, and final release evidence.
-
-Mainnet deployment is a release target subject to successful testnet validation, completion of the defined security review, resolution of critical/high-severity findings, reproducible deployment artifacts, and successful mainnet preflight. If mainnet gates remain unmet, deliver the validated testnet release and documented remediation state instead; unresolved testnet acceptance must be reported as incomplete. No corrected-V1 testnet or mainnet deployment has occurred. The complete gates and separate protocol, package, and frontend deployment responsibilities are in [the deployment guide](docs/deployment.md).
-
-## Repository Map
-
-- `contracts/`: legacy CKB scripts plus the on-chain part of the corrected-V1 Privacy Protocol/Core foundation.
-- `circuits/`: preserved legacy circuit/artifacts and the proof-system part of the corrected-V1 Privacy Core foundation.
-- `mixer-sdk/`: reusable Privacy SDK, protocol/cryptographic modules, and CCC adapter; legacy mixer exports are isolated at `mixer-sdk/legacy`.
-- `backend/`: legacy coordinator/relayer plus isolated chain-authoritative V1 interfaces.
-- `frontend/`: protocol/SDK reference application; privacy actions remain visibly simulated.
-- `examples/payment-app/`: local public-SDK boundary fixture using deterministic adapters; it is not a second product or live integration.
-- `tests/`: CKB contract tests.
-- `docs/`: architecture, protocol, SDK, security, test, deployment, and grant evidence.
-- [`progress/`](progress/README.md): dated research and implementation history. These files are evidence of evolution, not current protocol claims or independently re-verified deployment evidence.
-
-## Local Verification
-
-Prerequisites are Node.js, PNPM, Rust/Cargo, and a Chromium-compatible browser for the demo test.
-
-```bash
+```sh
 pnpm install --frozen-lockfile
 pnpm build
 pnpm test
-pnpm test:contracts
-pnpm --filter obscell-payment-example test:browser
-pnpm --filter frontend test:demo
-```
-
-Individual checks and environment requirements are recorded in [the test report](docs/test-report.md). Contract builds use the pinned toolchain in `rust-toolchain.toml`.
-
-Regenerate the explicitly simulated screenshot evidence and its hashes with:
-
-```bash
-pnpm --filter frontend capture:evidence
-pnpm --filter obscell-payment-example capture:evidence
-```
-
-The capture provenance and limits of each real screenshot are documented in [the evidence catalog](docs/evidence/README.md). Interface screenshots do not establish testnet or mainnet settlement.
-
-## Run The Reference Application
-
-```bash
 pnpm dev
 ```
 
-The default page is the Obscell Privacy Protocol reference application. It demonstrates the supported lifecycle and the SDK's intended place in a CKB application. Current privacy operations are deterministic local simulations and make no privacy transaction submission. The historical pool prototype is available at `?view=legacy` and is labeled accordingly.
+The browser opens a CCC application concept with an Incognito mode toggle, Send and Scan/Receive views, fresh-change status, and an always-readable disclosure panel. All simulated steps must remain labeled during screenshots and demos.
 
-## Documentation
+```sh
+pnpm --filter frontend test:demo
+pnpm --filter frontend capture:evidence
+```
 
-- [Architecture](docs/architecture.md)
-- [Protocol V1 specification](docs/protocol-v1.md)
-- [Research and design record](docs/research.md)
-- [Threat model](docs/threat-model.md)
-- [SDK guide](docs/sdk.md)
-- [CCC integration guide](docs/integration-guide.md)
-- [Pudge runbook](docs/pudge-runbook.md)
-- [Deployment guide](docs/deployment.md)
-- [Test vectors](docs/test-vectors.md)
-- [Implementation report](docs/implementation-report.md)
+The [evidence catalog](docs/evidence/README.md) records screenshot sources, capture dates, dimensions, and hashes. Interface images are evidence of the interface only.
 
-Grant proposal and funding materials are maintained locally and are intentionally not tracked in this repository.
+## Repository map
 
-Obscell is testnet-first research software. Do not use it to protect assets of value.
+| Path | Role |
+|---|---|
+| [`packages/stealth/`](packages/stealth/README.md) | Opt-in CCC package candidate |
+| `frontend/` | Incognito demonstration and reproducible browser capture |
+| [`docs/`](docs/README.md) | Current scope, design, integration, security, and validation |
+| [`docs/archive/pre-incognito/`](docs/archive/pre-incognito/README.md) | Preserved documentation for superseded designs |
+| `contracts/`, `circuits/`, `mixer-sdk/`, `backend/`, `tests/` | Historical research implementations, not current incognito dependencies or deliverables |
+| [`examples/payment-app/`](examples/payment-app/README.md), `legacy-demo/`, `progress/` | Earlier fixtures, prototypes, and dated research history |
+
+The historical repository URL retains its original name. Historical code and test results do not establish correctness of the new package. Existing script deployment helpers must not be used as incognito deployment instructions.
+
+## Scope and next acceptance steps
+
+The bounded goal is stealth send, view-key scan, spend through CCC, and optional fresh change, followed by a real testnet demonstration and an upstream contribution with documented review disposition. It does not include hidden amounts, a separate wallet product, new on-chain machinery, mainnet use, or a guaranteed upstream merge.
+
+Next acceptance steps are to agree the upstream boundary, confirm the exact reused testnet script and scanning format, complete live CCC integration, and publish independently verifiable testnet transactions. [Deployment and contribution guidance](docs/deployment.md) describes those gates without claiming they have passed.
+
+Grant proposals and funding details remain local and ignored. This is unaudited experimental software; do not use the demo or fixture keys for assets of value.

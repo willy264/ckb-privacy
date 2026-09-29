@@ -1,16 +1,14 @@
-# Attack Surface
+# Incognito Attack Surface
 
-| Boundary | Inputs | Principal failure modes |
+| Boundary | Risk | Required validation |
 |---|---|---|
-| Staging lock/script | cell data, args, witness, `since`, CT cell | unauthorized acceptance/refund, pool/asset substitution, timeout bypass |
-| Pool type | state data, script args, all protected inputs/outputs, proof ABI | stale transition, arithmetic overflow, wrong root/nullifier/recipient/action |
-| Vault lock + CT type | CT commitments, range proofs, witness ABI, capacities | inflation, mint spoof, wrong asset, payout substitution, typed fee input |
-| Groth16 verifier | nine public fields, 256-byte proof, verifying key | modulo reduction, malformed/infinity/non-subgroup points, wrong signal order |
-| SDK parser/state store | chain data, encrypted notes, service responses | non-canonical decode, corrupted state, secret exposure, unsafe migration |
-| CCC adapter | deployment manifest, live cells, signer, transaction mutation | network mismatch, replaced inputs, witness-group error, bad fee/change |
-| Coordinator | staging discovery, block checkpoints, acceptance queue | off-chain authority, reorg omission, nondeterminism, race handling |
-| Relayer | typed intent, fee policy, chain snapshot, hot signer | recipient/action mutation, stale input, excessive fee, CT funding |
-| Frontend | wallet connector, password, artifact URLs, UI state | phishing, secret logging, fake status, malicious artifact substitution |
-| Deployment/release | binaries, keys, manifests, RPC endpoints | wrong code hash, key leakage, legacy/V1 confusion, unverifiable build |
+| Meta-address entry | Substitution, malformed encoding, invalid points | Canonical decode, curve checks, intended-recipient review |
+| Derivation | Reused or weak ephemeral secret, incompatible hashing | Secure randomness, vectors, source and deployed-lock compatibility |
+| Candidate records | Malformed announcements, false positives, repeated or stale records | Strict parsing, ownership checks, deduplication, live-cell refresh |
+| Scan infrastructure | Omitted history, privacy leakage, reorganizations | Local view-key use, bounded replay, canonical block/checkpoint policy |
+| Draft completion | Changed destination, capacity mismatch, reused change | Inspect final transaction after CCC input/fee completion |
+| Spend signer | Wrong witness, exposed derived keys, wrong network | Exact lock signing format, isolated approval, verified deployment |
+| Web delivery | Malicious assets, dependencies, misleading labels | Reproducible builds, disclosure, explicit simulation/chain boundaries |
+| Public evidence | Fake confirmations or exposed secrets | Actual browser captures, provenance/hashes, sanitized independently checked chain records |
 
-Every boundary requires length limits, canonical decoding, explicit versions, structured errors, and negative tests. Secrets must never cross the client-to-service boundary.
+These controls are acceptance requirements, not a claim that the local demo already implements a live chain service or audited signer. The [current limitations](../known-limitations.md) identify the boundary.

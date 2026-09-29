@@ -1,4 +1,4 @@
-name: Frontend
+name: CCC Stealth Package and Demo
 
 on:
   push:
@@ -33,8 +33,8 @@ jobs:
       - name: Install Chromium and system dependencies
         run: pnpm --filter frontend exec playwright install --with-deps chromium
 
-      - name: Build and verify the independent SDK consumer
-        run: pnpm --filter obscell-payment-example test:browser
+      - name: Verify stealth derivation, scanning and transaction boundaries
+        run: pnpm run test:stealth
 
-      - name: Build and verify the browser demo
+      - name: Build and verify the incognito browser demo
         run: pnpm --filter frontend test:demo

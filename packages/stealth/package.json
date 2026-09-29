@@ -1,0 +1,26 @@
+{
+  "name": "@ckb-ccc/stealth",
+  "version": "0.0.0-demo",
+  "private": true,
+  "description": "Local prototype of the proposed opt-in CCC stealth-address package",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "pnpm build && node --test test/*.test.mjs"
+  },
+  "peerDependencies": { "@ckb-ccc/core": "^1.12.5" },
+  "dependencies": {
+    "@noble/curves": "1.9.7",
+    "@noble/hashes": "1.8.0"
+  },
+  "devDependencies": {
+    "@ckb-ccc/core": "^1.12.5",
+    "typescript": "^5.9.3"
+  }
+}

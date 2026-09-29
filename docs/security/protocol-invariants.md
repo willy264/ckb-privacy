@@ -1,17 +1,14 @@
-# Protocol Invariants
+# Stealth Integration Invariants
 
-1. Exactly one live PoolState and sibling Vault exist for a V1 pool identity.
-2. Pool ID, asset ID/type, denomination, tree depth, and protocol version are immutable.
-3. Every accepted state transition consumes the current PoolState/Vault pair and produces exactly one valid successor pair.
-4. Every transition increments the sequence by exactly one.
-5. Acceptance consumes only confirmed staging cells for the same pool/asset/denomination and appends each exact staged leaf once in deterministic input order.
-6. Acceptance increases Vault CT and outstanding accounting by the exact accepted denomination total; it does not change nullifier state.
-7. Refund leaves PoolState and Vault unchanged and returns the unchanged CT asset after the committed timeout to the committed refund lock.
-8. Withdrawal uses a currently accepted root, proves the frozen nine-signal statement, and changes one nullifier from absent to spent.
-9. Withdrawal preserves the commitment frontier/root and decreases Vault/outstanding value by exactly one denomination.
-10. Withdrawal creates one exact recipient-controlled output with the pool CT type/value and committed capacity reserve.
-11. The action hash binds state sequence, root, nullifier, pool/asset/value, recipient, recipient CT data, protocol output index, and Vault delta.
-12. Relayer-added inputs and change are untyped capacity only and are excluded only where the action schema explicitly permits fee variability.
-13. Every Fr/Fq integer is canonical; malformed values are rejected rather than reduced.
-14. Proof points are canonical, non-infinity, on-curve, and in the correct subgroup.
-15. A submitted transaction is not a committed operation until observed in the canonical chain under the configured confirmation/reorg policy.
+These are integration requirements for the existing lock, not a new on-chain specification.
+
+1. A meta-address contains canonical valid public keys. Invalid lengths, encodings, points, and scalar inputs must fail explicitly.
+2. Each real send uses fresh secure ephemeral randomness. Public deterministic fixture material remains labeled and cannot be presented as secret.
+3. The recognized one-time destination and derived ownership key must agree with the exact reused lock format.
+4. A view key alone does not authorize spending. Recognition and spending authority remain distinct.
+5. The final signed transaction preserves the intended recipient, amount, network, lock dependency, and fresh-change destination after CCC input and fee completion.
+6. Scanned records do not become confirmed or spendable solely because the UI recognizes them. Canonical-chain and live-cell checks are required.
+7. Amounts and sender inputs are never described as hidden. Fresh change is never described as complete transaction unlinkability.
+8. Simulated steps remain visibly labeled. Hashes, confirmations, block heights, and explorer evidence are displayed only when obtained from real verified chain activity.
+9. Secrets are excluded from public evidence, logs, telemetry, and ordinary transaction metadata. Public fixture secrets are explicitly identified as such.
+10. Package publication, upstream review, and deployment claims require their own independently checkable records.

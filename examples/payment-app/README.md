@@ -1,4 +1,6 @@
-# Obscell Privacy Protocol SDK boundary fixture
+# Archived SDK Boundary Fixture
+
+> Superseded on 2026-09-29. This example belongs to the previous implementation and is not an incognito demonstration, a current deliverable, or evidence for `@ckb-ccc/stealth`. Use the current [frontend and package](../../README.md). Its historical source and description below are preserved for provenance; old root command aliases may no longer apply.
 
 This is an applicant-authored local fixture for the public `mixer-sdk` package entry point. It demonstrates the application boundary around `PrivacyClient` without importing SDK internals or reusing the frontend's `DemoPrivacyClient`. It is not a second Obscell product, the grant's reference application, a promised live integration, or evidence of third-party adoption.
 

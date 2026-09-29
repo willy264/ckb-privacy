@@ -1,40 +1,21 @@
-# Obscell Privacy Protocol: Implementation Status
+# CCC Incognito Implementation Status
 
-**Documentation reviewed:** 2026-09-12. Source-level implementation and test evidence remain tied to the dated commands in [the test report](test-report.md).
+**Current direction:** reviewed on 2026-09-29. The deliverable is an opt-in CCC package for one-time-address send, recognition, and spend, with an optional fresh-change helper.
 
-`Implemented` means code exists and a listed local test has run. It does not mean deployed, audited, or production-ready.
-
-The project develops reusable **CKB Privacy Core and SDK** infrastructure. Privacy Protocol defines validity rules; Privacy Core implements them. Applications consume those capabilities through the Privacy SDK and inject their own CCC Client and operation-scoped Signer through its adapter. The reference application is the first controlled SDK consumer, not a separate wallet product. Its fixed-denomination privacy pool is the initial validation use case, not the project's architectural boundary.
-
-| Requirement | State | Evidence / gate |
+| Item | Current state | Evidence boundary |
 |---|---|---|
-| Legacy implementation preserved and isolated | Implemented | `legacy-demo/README.md`, `?view=legacy`, and `mixer-sdk/legacy`; the package root is V1-only |
-| Protocol/SDK reference application | Implemented simulation | `frontend/src/demo/`; browser verification, no live privacy settlement |
-| Applicant-authored SDK package-boundary fixture | Implemented deterministic fixture | `examples/payment-app`; unit/browser checks; no live settlement, separate-product, or third-party-adoption claim |
-| Injected CCC Client and operation-scoped Signer | Foundation implemented | `mixer-sdk/src/ccc/`, `createPrivacyClient` tests |
-| Strict V1 field/proof encodings | Foundation implemented | SDK canonical encoding tests and verifier parser tests |
-| Frozen nine-signal circuit source | Foundation implemented | versioned source under `circuits/`; no new trusted setup claimed |
-| Typed relayer intent and protected reconstruction | Foundation implemented, not live-wired | `backend/src/v1/` tests |
-| Chain-derived deterministic coordinator plan | Foundation implemented, scanner pending | `backend/src/v1/coordinator.ts` validates full snapshots/staging and caps deterministic batches at 16 |
-| Atomic private-state sync commit | Foundation implemented, persistent store pending | Store-level checkpoint compare-and-swap rejects stale commits across clients sharing a store; only a memory implementation ships |
-| PoolStateCell | Fail-closed structural foundation, not deployable | Strict codec and transaction-shape tests exist; genesis and state transitions return unsupported until Poseidon/SMT/CT/proof rules are connected |
-| VaultCell covenant and CT accounting | Fail-closed structural foundation, not deployable | Paired PoolState/shape checks exist; authoritative acceptance and withdrawal remain blocked on CT conservation and PoolState transitions |
-| StagingDepositCell and refund | Structural foundation, not deployed | Covenant validates staging metadata; the tested refund branch is structural only and uses a placeholder asset fixture |
-| Nullifier SMT | Codec/design foundation only | Canonical absence/update proof format and cryptographic script transition required |
-| Authoritative on-chain Merkle frontier/root history | Structural invariants only | Poseidon empty-root, append, and proof/update logic are intentionally unsupported in the script |
-| Deployable corrected V1 proving/verifying key | Not available | One insecure disposable benchmark setup was deleted; reproducible ceremony/build and reviewed artifact hashes remain required |
-| Proof-system benchmark on corrected workload | Partial local measurement | Disposable Groth16/snarkjs proof measured; CKB-VM verification and alternative systems remain unmeasured |
-| Real corrected-V1 Pudge E2E | Not run | All 20 runbook assertions remain open |
-| Recipient subsequent CT spend | Not run | Requires real Pudge recipient output |
-| Redis wipe/rebuild and reorg test | Interface only | Non-fixture Pudge state verifier/scanner, checkpoint implementation, and test required |
-| Independent security review | Not performed | Planned grant deliverable; local tests are not an audit |
-| Validated mainnet-ready release | Grant target, not achieved | Testnet evidence, passing protocol/crypto/adversarial/SDK checks, independent review, reproducible artifacts, and complete documentation required |
-| Mainnet deployment | Gated grant target, not performed | No unresolved critical/high security findings; all release gates and a separate mainnet network/manifest preflight must pass |
+| Private package candidate | Local `packages/stealth/` implementation | Not a published or upstream-accepted CCC package |
+| Meta-address handling and sender derivation | Local codec and ECDH implementation | Check package tests; deployed-lock compatibility still requires testnet validation |
+| Incoming-payment recognition | Supplied-record scanning | Demo records are fixtures, not chain discovery |
+| Spend and fresh-change preparation | Local unsigned preparation | No live stealth signature, broadcast, or confirmed spend |
+| CCC transaction construction | Draft transaction object | No live input/fee completion or funded signer |
+| Incognito application | Toggle, Send, Scan/Receive, change status, disclosure | Chain-dependent steps visibly SIMULATED |
+| Screenshot evidence | Reproducible browser captures | Capture date and hashes in the evidence catalog; no deployment claim |
+| Reused Obscell lock | Target dependency identified by the proposal | This demo does not independently verify the deployed binary or configuration |
+| Real testnet send → scan → spend | Not demonstrated | Requires actual chain records and independently checked transactions |
+| Upstream CCC contribution | Target, not claimed complete | No issue, fork state, pull request, review, or merge is asserted |
+| Independent audit / mainnet | Outside the current scope | No security certification or mainnet readiness claim |
 
-No transaction hashes, deployments, confirmations, balance values, or security-review results are asserted by this status page.
+Use [the test report](test-report.md) for command-level evidence and [the package guide](sdk.md) for the API boundary.
 
-## Grant Work And Future Scope
-
-The five-month / approximately 20-week plan covers core architecture and vectors in Month 1; protocol/CKB/cryptographic completion and adversarial checks in Month 2; SDK/CCC completion and developer integration in Month 3; reference integration and real Pudge lifecycle evidence in Month 4; and hardening and release in Month 5. The final month addresses integration defects, cryptographic findings, testnet issues, independent review, remediation, deployment preparation, and final release evidence. The [deployment guide](deployment.md) defines the mainnet acceptance gates. If they remain unmet, deliver the validated testnet release and documented remediation state instead; unresolved testnet checks must remain labeled incomplete. This is a gated release plan, not an unconditional launch promise.
-
-Wallet privacy, private payments, private transfers, private DeFi interactions, and broader private application state are possible later adoption directions. They are not current capabilities or additional grant deliverables. The local `examples/payment-app` fixture proves a package boundary only.
+The earlier implementation and its historical results remain [archived](archive/pre-incognito/README.md). They are not dependencies or acceptance results for this direction. Interface hosting proves delivery of the interface, not that a stealth transaction has settled.

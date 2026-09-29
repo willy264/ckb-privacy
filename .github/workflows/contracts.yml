@@ -1,8 +1,7 @@
-name: Protocol, Contracts, and Services
+name: Historical Contracts and Services (manual)
 
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -78,10 +77,10 @@ jobs:
         run: git diff --exit-code -- contracts/zk-membership-type/src/vk.rs
 
       - name: Build all JavaScript workspaces
-        run: pnpm run build
+        run: pnpm run build:legacy
 
       - name: Test SDK, backend V1, and circuits
-        run: pnpm test
+        run: pnpm run test:legacy
 
       - name: Build and test legacy and V1 RISC-V contracts
         run: pnpm run test:contracts
