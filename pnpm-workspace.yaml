@@ -1,4 +1,5 @@
 packages:
+  - 'packages/stealth'
   - 'circuits'
   - 'examples/*'
   - 'mixer-sdk'
