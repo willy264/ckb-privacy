@@ -1,7 +1,3 @@
 packages:
   - 'packages/stealth'
-  - 'circuits'
-  - 'examples/*'
-  - 'mixer-sdk'
-  - 'frontend'
-  - 'backend'
+  - 'examples/incognito'
