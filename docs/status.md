@@ -1,30 +1,22 @@
-# Implementation Status
+# CCC Incognito Implementation Status
 
-**As of:** 2026-09-05
+**Current direction:** reviewed on 2026-09-29. The deliverable is an opt-in CCC package for one-time-address send, recognition, and spend, with an optional fresh-change helper.
 
-`Implemented` means code exists and a listed local test has run. It does not mean deployed, audited, or production-ready.
-
-| Requirement | State | Evidence / gate |
+| Item | Current state | Evidence boundary |
 |---|---|---|
-| Legacy implementation preserved and isolated | Implemented | `legacy-demo/README.md`, `?view=legacy`, and `mixer-sdk/legacy`; the package root is V1-only |
-| CCC-oriented reference experience | Implemented simulation | `frontend/src/demo/`; browser verification |
-| Separate applicant-authored public-SDK consumer | Implemented deterministic fixture | `examples/payment-app`; unit/browser checks; no live settlement or third-party adoption claim |
-| Injected CCC Client and operation-scoped Signer | Foundation implemented | `mixer-sdk/src/ccc/`, `createPrivacyClient` tests |
-| Strict V1 field/proof encodings | Foundation implemented | SDK canonical encoding tests and verifier parser tests |
-| Frozen nine-signal circuit source | Foundation implemented | versioned source under `circuits/`; no new trusted setup claimed |
-| Typed relayer intent and protected reconstruction | Foundation implemented, not live-wired | `backend/src/v1/` tests |
-| Chain-derived deterministic coordinator plan | Foundation implemented, scanner pending | `backend/src/v1/coordinator.ts` validates full snapshots/staging and caps deterministic batches at 16 |
-| Atomic private-state sync commit | Foundation implemented, persistent store pending | Store-level checkpoint compare-and-swap rejects stale commits across clients sharing a store; only a memory implementation ships |
-| PoolStateCell | Fail-closed structural foundation, not deployable | Strict codec and transaction-shape tests exist; genesis and state transitions return unsupported until Poseidon/SMT/CT/proof rules are connected |
-| VaultCell covenant and CT accounting | Fail-closed structural foundation, not deployable | Paired PoolState/shape checks exist; authoritative acceptance and withdrawal remain blocked on CT conservation and PoolState transitions |
-| StagingDepositCell and refund | Structural foundation, not deployed | Covenant validates staging metadata; the tested refund branch is structural only and uses a placeholder asset fixture |
-| Nullifier SMT | Codec/design foundation only | Canonical absence/update proof format and cryptographic script transition required |
-| Authoritative on-chain Merkle frontier/root history | Structural invariants only | Poseidon empty-root, append, and proof/update logic are intentionally unsupported in the script |
-| Deployable corrected V1 proving/verifying key | Not available | One insecure disposable benchmark setup was deleted; reproducible ceremony/build and reviewed artifact hashes remain required |
-| Proof-system benchmark on corrected workload | Partial local measurement | Disposable Groth16/snarkjs proof measured; CKB-VM verification and alternative systems remain unmeasured |
-| Real corrected-V1 Pudge E2E | Not run | All 20 runbook assertions remain open |
-| Recipient subsequent CT spend | Not run | Requires real Pudge recipient output |
-| Redis wipe/rebuild and reorg test | Interface only | Non-fixture Pudge state verifier/scanner, checkpoint implementation, and test required |
-| Independent security review | Not performed | Planned grant deliverable; local tests are not an audit |
+| Private package candidate | Local `packages/stealth/` implementation | Not a published or upstream-accepted CCC package |
+| Meta-address handling and sender derivation | Local codec and ECDH implementation | Check package tests; deployed-lock compatibility still requires testnet validation |
+| Incoming-payment recognition | Supplied-record scanning | Demo records are fixtures, not chain discovery |
+| Spend and fresh-change preparation | Local unsigned preparation | No live stealth signature, broadcast, or confirmed spend |
+| CCC transaction construction | Draft transaction object | No live input/fee completion or funded signer |
+| Incognito application | `examples/incognito`: toggle, Send, Scan/Receive, change status, disclosure | Chain-dependent steps visibly SIMULATED |
+| Workspace boundary | Only `packages/stealth` and `examples/incognito` are active members | Historical source is excluded from default install, builds, and CI |
+| Screenshot evidence | Reproducible browser captures | Capture date and hashes in the evidence catalog; no deployment claim |
+| Reused Obscell lock | Target dependency identified by the proposal | This demo does not independently verify the deployed binary or configuration |
+| Real testnet send → scan → spend | Not demonstrated | Requires actual chain records and independently checked transactions |
+| Upstream CCC contribution | Target, not claimed complete | No issue, fork state, pull request, review, or merge is asserted |
+| Independent audit / mainnet | Outside the current scope | No security certification or mainnet readiness claim |
 
-No transaction hashes, deployments, confirmations, balance values, or security-review results are asserted by this status page.
+Use [validation](validation.md) for command-level evidence and [the package API](../packages/stealth/README.md) for the implementation boundary.
+
+Earlier work is retained in [Git history](history.md). It is not a dependency or acceptance result for this direction. Interface hosting proves delivery of the interface, not that a stealth transaction has settled.
