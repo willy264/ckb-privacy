@@ -45,4 +45,19 @@ Keep the disclosure panel visible: recipient linkage is the intended protection;
 
 `pnpm build` produces `examples/incognito/dist`, which the root Vercel configuration serves. This hosts the simulated interface; it does not deploy a chain script. No environment variables or wallet secrets are needed.
 
+For the connected Vercel project, open **Settings → Build and Deployment** and use these settings:
+
+| Setting | Value |
+|---|---|
+| Root Directory | Repository root; leave the field empty |
+| Framework | Vite |
+| Install Command | `npx --yes pnpm@10.32.1 install --frozen-lockfile` |
+| Build Command | `npx --yes pnpm@10.32.1 build` |
+| Output Directory | `examples/incognito/dist` |
+| Node.js Version | 24.x |
+
+The committed [`vercel.json`](../vercel.json) supplies the install, build, and output settings. Root Directory is a separate project setting: an older value of `frontend` points at a folder that the current workspace no longer uses. Clear that value, save, and deploy the current `main` revision. The setting takes effect on the next deployment; saving it does not repair an earlier deployment result. See [Vercel's Root Directory documentation](https://vercel.com/docs/builds/configure-a-build#root-directory).
+
+If a deployment still fails, inspect its actual build log before changing package or workspace paths. With a local Vercel login, run `npx vercel inspect <deployment-id> --logs`, or open the deployment's Build Logs in the dashboard. Never commit account tokens or add wallet secrets to deploy this demonstration.
+
 The contribution target is a CCC-scoped package. Agree its API and integration boundary with maintainers, verify the reused lock and witness format, then prepare the fork, tests, documentation, changeset, and upstream submission using CCC's contribution conventions. A local candidate, a submitted PR, and an accepted package are separate states. Mainnet use and a guaranteed merge are outside the current scope.
