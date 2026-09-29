@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Incognito mode inside CCC</title>
+  <desc id="desc">Target architecture. The application opts into the proposed CCC stealth package. CCC retains wallet, inputs, fees, signer, RPC and indexer. The existing Obscell stealth lock is the testnet target. Amounts and sender inputs remain public.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#2d5ed8"/></marker>
+    <style>text{font-family:Arial,sans-serif;fill:#162846}.title{font-size:40px;font-weight:700}.heading{font-size:27px;font-weight:700}.body{font-size:22px}.small{font-size:19px;fill:#4a5d76}.blue{fill:#244fb7}.label{font-size:19px;font-weight:700;fill:#244fb7}.arrow{stroke:#2d5ed8;stroke-width:3;fill:none;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="1600" height="1100" fill="#fff"/>
+  <text x="64" y="72" class="title">Incognito mode inside CCC</text>
+  <text x="64" y="108" class="small">Target architecture — not deployment evidence</text>
+  <rect x="64" y="148" width="1472" height="140" rx="18" fill="#f1f5ff" stroke="#c5d4ef"/>
+  <text x="96" y="193" class="heading">CCC application</text>
+  <text x="96" y="231" class="body">Incognito toggle · Send · Scan / Receive · Spend · Disclosure panel</text>
+  <text x="96" y="266" class="small">The application retains its wallet connection and chooses when to use stealth receiving.</text>
+  <path d="M460 288V343" class="arrow"/><path d="M1140 288V343" class="arrow"/>
+  <rect x="64" y="343" width="1472" height="342" rx="18" fill="#fff" stroke="#2d5ed8" stroke-width="2"/>
+  <text x="96" y="390" class="heading blue">CCC codebase — proposed opt-in contribution</text>
+  <rect x="96" y="418" width="660" height="229" rx="12" fill="#f5f7fb"/>
+  <text x="122" y="459" class="heading">Existing CCC capabilities</text>
+  <text x="122" y="498" class="body">Client / RPC / indexer</text>
+  <text x="122" y="535" class="body">Transaction · completeInputs · completeFee</text>
+  <text x="122" y="572" class="body">Wallet approval · signer · submission</text>
+  <text x="122" y="616" class="small">Shared application infrastructure</text>
+  <rect x="838" y="418" width="666" height="229" rx="12" fill="#edf3ff"/>
+  <text x="864" y="459" class="heading blue">@ckb-ccc/stealth</text>
+  <text x="864" y="498" class="body">Meta-address codec · one-time lock derivation</text>
+  <text x="864" y="535" class="body">View-key scanning · spend-key derivation</text>
+  <text x="864" y="572" class="body">Stealth signer · optional fresh-change helper</text>
+  <text x="864" y="616" class="small">Working package name; upstream review pending</text>
+  <path d="M838 554H762" class="arrow"/>
+  <text x="793" y="529" text-anchor="middle" class="small">uses</text>
+  <path d="M460 685V766" class="arrow"/>
+  <text x="494" y="737" class="label">CCC builds and signs; CKB validates</text>
+  <rect x="64" y="766" width="1472" height="142" rx="18" fill="#f1f5ff" stroke="#c5d4ef"/>
+  <text x="96" y="811" class="heading">CKB testnet — existing Obscell stealth lock</text>
+  <text x="96" y="850" class="body">One-time output ownership · ephemeral public key in lock arguments</text>
+  <text x="96" y="884" class="small">Reused on-chain primitive. Deployment identity and an actual CCC send → scan → spend still require validation.</text>
+  <rect x="64" y="941" width="1472" height="103" rx="12" fill="#162846"/>
+  <text x="96" y="981" style="font-size:24px;font-weight:700;fill:white">Receiver unlinkability only. Amounts and sender inputs are NOT hidden.</text>
+  <text x="96" y="1019" style="font-size:21px;fill:#d8e4ff">Fresh change avoids address reuse; timing, network and amount correlation remain possible.</text>
+</svg>

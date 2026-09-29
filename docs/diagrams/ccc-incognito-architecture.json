@@ -1,0 +1,15 @@
+{
+  "classification": "Target architecture, not deployment evidence",
+  "generatedAtUtc": "2026-09-29T15:54:10.977Z",
+  "command": "node frontend/scripts/export-incognito-architecture.mjs",
+  "browser": {
+    "channel": "chrome",
+    "version": "153.0.8010.53"
+  },
+  "source": "ccc-incognito-architecture.svg",
+  "sourceSha256": "5692ac5cb0e9b8076c9e489673999b0cf7dccfc3d661699abf631e40be00b060",
+  "file": "ccc-incognito-architecture.png",
+  "sha256": "9547668d0073e3b065aed57dca0c2ca5ff8cf40c59855e22fd563c22585734f0",
+  "width": 1600,
+  "height": 1100
+}
