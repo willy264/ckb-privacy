@@ -33,5 +33,5 @@ jobs:
       - name: Install Chromium and system dependencies
         run: pnpm --filter @ccc-incognito/demo exec playwright install --with-deps chromium
 
-      - name: Verify package and browser demo
+      - name: Verify workspace boundaries, package and browser demo
         run: pnpm test

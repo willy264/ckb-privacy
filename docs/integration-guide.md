@@ -1,86 +1,48 @@
-# Integrating Obscell Into A CCC Application
+# Integrating Incognito Mode in a CCC Application
 
-This guide demonstrates the architectural boundary available today. It does not claim live corrected-V1 settlement.
+The target is one optional CCC capability: `@ckb-ccc/stealth`. This checkout contains a private candidate package and a simulated demonstration, not a production integration.
 
-## 1. Keep Existing CCC Ownership
+## Start locally
 
-Your application continues to create/select the CCC client and wallet signer. Obscell does not install a connector or switch networks:
-
-```ts
-import type { ccc } from "@ckb-ccc/core";
-import {
-  createPrivacyClient,
-  InMemoryPrivacyStateStore,
-  type PrivacyDeployment,
-  type PrivacyServices,
-} from "mixer-sdk";
-
-declare const client: ccc.Client;
-declare const signer: ccc.Signer;
-declare const deployment: PrivacyDeployment;
-declare const services: PrivacyServices; // includes indexer + independent stateVerifier for sync
-
-const privacy = createPrivacyClient({
-  client,
-  deployment,
-  stateStore: new InMemoryPrivacyStateStore(), // development only
-  services,
-  prover,
-});
+```sh
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm build
+pnpm dev
 ```
 
-For a real application, replace the memory store with an authenticated, encrypted-at-rest implementation. Its `commitSync(snapshot, notes, expectedPrevious)` method must atomically compare the stored pool/block/outpoint checkpoint with `expectedPrevious` and commit the snapshot plus all note updates in one storage transaction. This compare-and-swap must work across application instances or processes sharing the database; the SDK's per-client queue does not provide that guarantee. Load `deployment` from a verified versioned manifest, not UI-controlled or untrusted remote JSON.
+The example lives in [`examples/incognito/`](../examples/incognito/README.md), with workspace name `@ccc-incognito/demo`. It imports reusable capabilities from `@ckb-ccc/stealth` and public fixtures from `@ckb-ccc/stealth/testing`; it does not import package source files or archived implementations. The demo defaults to an ordinary CCC send concept and offers an Incognito mode toggle. Turning it on changes the destination flow to a stealth meta-address; it does not hide the amount or sender inputs.
 
-## 2. Gate UI With Capabilities
+## Send flow
 
-```ts
-const capabilities = await privacy.getCapabilities();
+1. Validate the recipient's meta-address and selected network. The meta-address carries public view and spend keys; it is not a transaction hash or a normal CKB address.
+2. Derive a fresh one-time destination and ephemeral public key. Show which data will be public. Never reuse a sender ephemeral secret for unrelated sends.
+3. Build a CCC transaction draft with the intended amount and destination. The local demo performs draft construction without real inputs or fees.
+4. In a completed live integration, use the application's CCC signer for input completion, fee completion, wallet approval, signing, and submission. The proposed CCC handoff uses `completeInputsByCapacity` and `completeFeeChangeToLock` (which delegates to `completeFee`) to preserve the fresh-change lock. Verify that final outputs, dependencies, capacity, and fresh change still match the user's intent.
+5. Display a transaction hash only after a real submission returns one. Determine confirmation from the canonical chain, not a timer or UI state.
 
-if (capabilities.shield !== "supported") {
-  // Keep live settlement disabled and explain the deployment limitation.
-}
-```
+The current demonstration labels the live handoff **SIMULATED** and does not perform steps requiring a funded signer.
 
-Current V1 foundation correctly reports settlement unavailable. Do not catch `UNSUPPORTED_OPERATION` and replace it with a local balance or fake transaction status.
+## Scan and receive
 
-## 3. Synchronize Authoritative State
+Recognition accepts a view key and candidate records. The local demo supplies visibly simulated incoming records; a match means the local key recognizes a record, not that a real testnet cell is live or confirmed.
 
-```ts
-const snapshot = await privacy.sync({ poolId });
-const balance = await privacy.getPrivateBalance({ poolId });
-const notes = await privacy.listNotes({ poolId, state: "accepted" });
-```
+The live integration must discover candidates through the CCC client/indexer, validate their exact lock and metadata, track a scan cursor and canonical block identity, handle reorganizations, and refresh spent status. Do not send a view key to a public RPC provider merely to make discovery easier.
 
-The injected indexer must resolve live PoolState/Vault cells through the supplied client, checkpoint block hashes, and handle rollback. Its output is untrusted until the separate `services.stateVerifier` checks the live cells and block identity through the same injected client; `sync()` is unavailable without both services. The verified result is still committed conditionally, so a concurrent update produces retryable `STALE_STATE` instead of overwriting newer private state. No production indexer, verifier, or encrypted persistent store ships in this foundation. Balance includes only accepted unspent local notes whose recorded proof root remains in the authoritative window; inspect `NoteMetadata.proofStatus === "root-expired"` to schedule path/root refresh without treating the note as spent.
+## Spend
 
-## 4. Supply Signers Per Operation
+Recognizing a payment is not permission to spend it. The recipient must control the spend secret and derive the corresponding one-time signing material. The demo checks local ownership and derives destination/change addresses. It does not construct a spending transaction with a live input or implement a deployed-lock signing ceremony.
 
-```ts
-await privacy.shield({ poolId, signer });
+A real spend needs the verified lock dependency, its exact witness layout and signature procedure, resolved live inputs, capacity/fee completion, user approval, submission, and chain confirmation. Unavailable live operations must remain unavailable rather than falling back to a generic signer that cannot authorize the lock.
 
-await privacy.unshield({
-  noteId,
-  recipient: recipientAddress,
-  submission: { kind: "direct", signer },
-});
-```
+## Fresh change and disclosure
 
-The SDK rejects a signer attached to another client instance. A relayed operation instead uses `{ kind: "relayed", maxFee }`; the relayer reconstructs the transaction and may add only untyped fee capacity.
+Route change to a fresh derived destination and inspect the finalized transaction, because generic fee completion can otherwise introduce a reusable change address. A fresh address does not hide the change amount or links through the transaction graph.
 
-These calls currently fail explicitly because the V1 staging/withdrawal pipelines are not connected. The examples define integration shape, not runnable settlement.
+Keep the disclosure panel visible: recipient linkage is the intended protection; **amounts and sender inputs are NOT hidden**. The [security notes](security.md) cover view-key disclosure, compromised interfaces, and correlation limits.
 
-## 5. Keep Wallet/UI Concerns Outside
+## Hosting and upstream preparation
 
-The application owns JoyID or other connector setup, modals, password prompts, progress UI, notifications, analytics, explorer links, and display formatting. It must never send note secrets, nullifier secrets, plaintext backups, or passwords to services or telemetry.
+`pnpm build` produces `examples/incognito/dist`, which the root Vercel configuration serves. This hosts the simulated interface; it does not deploy a chain script. No environment variables or wallet secrets are needed.
 
-## 6. Second Consumer Test
-
-`examples/payment-app` is a minimal separate applicant-authored consumer that imports only the public package entry point and supplies its own CCC-shaped client, transient store, indexer, verifier, and UI. Its deterministic fixture proves package/API separation and zero submission; it is not third-party adoption or live-chain evidence. A valid release must replace those fixtures with real application-owned adapters and exercise the same public API on Pudge. Shared source copied from the reference wallet would not prove reusability.
-
-## 7. Before Enabling Live Controls
-
-- Manifest network/address prefix, pool Type-ID, CT script hash, domains, circuit hashes, and cell deps validate.
-- Cross-language vectors and all builds/tests pass.
-- The exact Pudge runbook passes, including recipient subsequent spend.
-- Independent review status and unresolved findings are visible.
-- Capability discovery reports the operation as supported from verified adapters, not an environment flag alone.
+The contribution target is a CCC-scoped package. Agree its API and integration boundary with maintainers, verify the reused lock and witness format, then prepare the fork, tests, documentation, changeset, and upstream submission using CCC's contribution conventions. A local candidate, a submitted PR, and an accepted package are separate states. Mainnet use and a guaranteed merge are outside the current scope.

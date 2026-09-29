@@ -1,115 +1,50 @@
-# Architecture
+# CCC Incognito Architecture
 
-**Status:** Target corrected-V1 architecture. The diagrams below specify the grant destination and trust boundaries; they do not depict a deployed system. Today, PoolState initialization/acceptance/withdrawal fail closed, non-fixture Pudge scanner/storage/transaction adapters are absent, and no corrected-V1 Pudge flow has run. See [implementation status](status.md) for the evidence-backed boundary.
+**Target integration, not deployment evidence.** The current local application demonstrates this flow with visibly simulated records and unsigned transaction drafts.
 
-## System
+## One optional CCC capability
 
-```mermaid
-flowchart TD
-    A[CKB application] --> B[Injected CCC Client and operation-scoped Signer]
-    B --> C[Obscell PrivacyClient]
-    C --> D[Privacy core]
-    D --> E[Protocol state, proof, and CT invariants]
-    E --> F[CKB PoolState, Vault, and Staging cells]
-    G[Coordinator] -. derives and proposes .-> F
-    H[Relayer] -. reconstructs and submits .-> F
-    I[Indexer] -. observes and caches .-> F
-```
-
-The dashed services are replaceable operators. They do not define roots, nullifiers, commitments, balances, or accepted state. A CKB application can remove Obscell and continue using the same CCC connection and signer.
-
-## Deposit
-
-```mermaid
-flowchart LR
-    A[User-owned supported CT] -->|CCC builds; user signs| B[StagingDepositCell]
-    B -->|confirmed chain discovery| C[Deterministic acceptance plan]
-    C -->|input conflict selects current state| D[Successor PoolState]
-    C --> E[Successor Vault]
-    D --> F[Authoritative root and sequence]
-    E --> G[Authoritative CT balance]
-```
-
-The implemented staging foundation commits to pool identity, asset, denomination, leaf, refund lock, and timeout. In the completed design, acceptance will consume the live PoolState/Vault pair and confirmed staging cells atomically. A coordinator may build the transaction, but CKB validation must decide whether it is accepted.
-
-## Withdrawal
-
-```mermaid
-flowchart LR
-    A[Accepted local note] --> B[Chain-derived Merkle path]
-    B --> C[Local proof generation]
-    C --> D[Typed withdrawal intent]
-    D --> E[Reconstructed PoolState and Vault transition]
-    E --> F[Recipient-controlled CT output]
-    F --> G[Recipient spends CT with normal CCC signer]
-```
-
-The corrected circuit foundation binds pool, asset, denomination/value, supplied root, nullifier, recipient, action, and authorization tag. The unfinished Pool script must recompute protected fields from actual transaction and canonical state data before it may accept the transition.
-
-## Trust Boundary
-
-```mermaid
-flowchart TB
-    subgraph ON[On-chain authority]
-      PS[PoolState and sequence]
-      V[Vault and CT accounting]
-      N[Nullifier state]
-      M[Commitments and accepted roots]
-      PV[Proof and transition validation]
-    end
-    subgraph CLIENT[Private client boundary]
-      S[Note secret]
-      NS[Nullifier secret]
-      ES[Encrypted note state]
-      PG[Proof generation]
-    end
-    subgraph OFF[Untrusted / replaceable services]
-      CO[Coordinator]
-      RE[Relayer]
-      IX[Indexer and cache]
-      RD[(Redis)]
-    end
-    CLIENT -->|public commitment / intent only| OFF
-    OFF -->|candidate transactions / observations| ON
-    ON -->|canonical cells and confirmations| CLIENT
-    RD --- CO
-    RD --- RE
-    RD --- IX
-```
-
-Under the target trust model, client secrets never belong in coordinator, relayer, indexer, Redis, logs, telemetry, or transaction witnesses. Wiping Redis may lose queues or cached progress, but must not change protocol truth. The clean rebuild and reorganization behavior shown here remains a grant acceptance test.
-
-## SDK
+An application already using CCC opts into the working package `@ckb-ccc/stealth`. The package adds meta-address handling, one-time-address derivation, recognition of incoming records, spend-key derivation, and fresh-change preparation. CCC retains transaction primitives, client/indexer access, wallet approval, and signing.
 
 ```mermaid
 flowchart TD
-    APP[Application or reference wallet] --> PC[PrivacyClient]
-    PC --> CORE[core: capabilities, operations, errors]
-    PC --> NOTES[notes: encrypted state and lifecycle]
-    PC --> PROTOCOL[protocol: schemas and invariants]
-    PC --> CRYPTO[crypto, Merkle, nullifier]
-    PC --> PROVER[prover abstraction]
-    PC --> SERVICES[coordinator, relayer, indexer interfaces]
-    PC --> ADAPTER[ccc: deployment, reader, transaction, signer, capacity]
-    ADAPTER --> CCC[Injected CCC Client / Signer]
-    CCC --> CKB[CKB]
+    A[CCC application: Incognito mode toggle] --> S[Optional @ckb-ccc/stealth package]
+    A --> C[Existing CCC client and signer]
+    S --> D[Meta-address and one-time-address derivation]
+    S --> R[View-key recognition and spending helpers]
+    S --> F[Fresh-change helper]
+    D --> T[CCC transaction draft]
+    R --> T
+    F --> T
+    C --> T
+    T --> H[CCC input and fee completion, wallet approval]
+    H --> K[CKB testnet: reused Obscell stealth lock]
 ```
 
-The SDK boundary does not own React, JoyID, wallet selection, deployment keys, relayer hot keys, Redis, analytics, or product UI. Wallet connectors remain application concerns. A signer is supplied only to the operation that needs user approval. The current SDK exposes this boundary and fails unavailable settlement operations explicitly; the live adapters in the diagram remain grant work.
+The contribution target is a scoped package inside CCC. This repository provides a private local candidate and demo; neither publication nor upstream acceptance is claimed.
 
-## State Ownership
+The active workspace has two members: `packages/stealth` contains the reusable modules, while `examples/incognito` contains the application, its state and views, and browser evidence tooling. The application imports the public package entry points. Public demo identities and deterministic test helpers are isolated in `@ckb-ccc/stealth/testing`. Earlier implementations are retained in [Git history](history.md), outside the current review tree and builds.
 
-| Data | Authority | Cached/derived copies |
-|---|---|---|
-| Pool identity and configuration | Pool Type-ID / genesis PoolState | Deployment manifest, SDK cache |
-| Current sequence and root | Live PoolStateCell | Client and indexer cache |
-| Commitments | Accepted PoolState transition / chain history | Merkle index |
-| Vault value and CT asset | Live VaultCell plus CT script | Client and service cache |
-| Nullifier spent state | Live PoolState nullifier commitment | Indexer cache |
-| Note secrets | User-controlled encrypted state | No service copy |
-| Operation queue and idempotency | Operational only | Redis or local store |
-| Transaction confirmation | CKB canonical chain | Service/client observations |
+## Send
 
-## Identity And Versioning
+The recipient publishes a meta-address containing a view public key and a spend public key. The sender uses a fresh ephemeral key to derive a one-time destination and the ephemeral public key needed for recognition. Public announcements and lock arguments must match the reused lock's exact byte layout.
 
-A corrected-V1 deployment will use fresh script code hashes, Type-IDs, pool IDs, circuit artifact hashes, and a versioned deployment manifest. None exists today. Legacy registry cells and coordinator sessions must never be V1 genesis inputs. Network, genesis hash, code hashes, outpoints, script args, circuit hashes, tree depth, denomination, and CT identity must all match before `getCapabilities()` may report settlement as available.
+The draft is constructed with CCC. A completed live integration will resolve input capacity, call CCC's input and fee completion routines, present the actual transaction for wallet approval, then sign and submit. In the current demo that handoff is labeled **SIMULATED**: no signed transaction or settlement is produced.
+
+With incognito off, the UI demonstrates an ordinary CCC send. Both modes retain the same application-owned wallet boundary.
+
+## Scan and spend
+
+The receiver uses a view key to test candidate records and identify matching one-time outputs. Scanning does not require the spending secret. Spending additionally requires the spending secret and a transaction signature acceptable to the exact on-chain lock.
+
+Today the package scans supplied local records and prepares a spend plan containing verified local authority and fresh destination/change addresses. It does not invent a live outpoint or construct a spending transaction. Live CCC indexer discovery, canonical-chain confirmation, spent-cell refresh, and the deployed lock's witness/signing integration are not demonstrated.
+
+## Change hygiene
+
+Fresh change goes to a newly derived address rather than a reusable receiving identity. A real implementation must preserve that output through input/fee completion and verify the final transaction. The current UI can demonstrate distinct derived change addresses, but it does not establish anonymity: change amounts, sender inputs, and the transaction graph remain visible.
+
+## What observers see
+
+A one-time destination obscures the link to the recipient's published meta-address. The destination script and ephemeral public key are public. Amounts, input cells, output cells, fees, and transaction timing remain public. Network and amount correlation can still link activity.
+
+No new on-chain protocol is introduced. The [research record](research.md) credits the Obscell contract and wallet implementations and identifies compatibility checks still needed.

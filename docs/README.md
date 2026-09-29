@@ -1,22 +1,19 @@
-# Obscell Documentation
+# Documentation
 
-| Document | Purpose |
+Start with the [maintainer review guide](review-guide.md). The runnable code is the private `@ckb-ccc/stealth` candidate and its [Incognito example](../examples/incognito/README.md).
+
+| Document | What it answers |
 |---|---|
-| [Status](status.md) | Evidence-based implementation matrix |
-| [Architecture](architecture.md) | System, flow, trust-boundary, and SDK diagrams |
-| [Proposal diagram assets](diagrams/README.md) | Rendered target diagrams embedded in the Word proposal |
-| [Protocol V1](protocol-v1.md) | Consensus statement and state-machine specification |
-| [Research](research.md) | Architecture evolution, alternatives, and decisions |
-| [Threat model](threat-model.md) | Assets, actors, threats, mitigations, and assumptions |
-| [SDK](sdk.md) | Public API and module responsibilities |
-| [Integration guide](integration-guide.md) | Add Obscell to an existing CCC application |
-| [Pudge runbook](pudge-runbook.md) | Reproducible testnet acceptance procedure |
-| [Deployment](deployment.md) | Versioned deployment and manifest rules |
-| [Test vectors](test-vectors.md) | Cross-language vector contract |
-| [Test report](test-report.md) | Commands and results actually executed |
-| [Known limitations](known-limitations.md) | Current blockers and out-of-scope work |
-| Grant proposal | Maintained locally; funding details are not tracked in this repository |
-| [Implementation report](implementation-report.md) | Before/after account and remaining work |
-| [Screenshot evidence](evidence/README.md) | Captures and what each one proves |
+| [Review guide](review-guide.md) | Where to read the code and which CCC integration decisions need feedback |
+| [Architecture](architecture.md) | How the package, application, CCC client/signer, and reused lock relate |
+| [Package API](../packages/stealth/README.md) | Exports, a runnable local example, formats, and module responsibilities |
+| [Integration](integration-guide.md) | Send, recognition, spend, and transaction-completion boundaries |
+| [Security](security.md) | Privacy limits, key handling, ownership checks, and pending signing verification |
+| [Status](status.md) | Implemented behavior versus pending live integration |
+| [Validation](validation.md) | Reproduction commands, executed checks, and evidence limits |
+| [Research and attribution](research.md) | Reused sources and unresolved compatibility questions |
+| [Evidence](evidence/README.md) | Four current demo screenshots, dates, and hashes |
+| [Architecture artwork](diagrams/README.md) | Current target diagram and its source |
+| [History](history.md) | Earlier work retained outside the current review tree |
 
-Normative language (`MUST`, `MUST NOT`, `SHOULD`) is used only in the protocol and deployment specifications. Dated progress reports under `progress/` remain historical records and may describe superseded designs.
+Local computations are real; chain-dependent demo steps remain **SIMULATED**. Amounts and sender inputs are public. Funding documents are local and excluded from this public documentation.
