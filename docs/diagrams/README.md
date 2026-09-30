@@ -9,9 +9,11 @@ Receiver unlinkability is the goal; amounts and sender inputs remain public. Fre
 Regenerate the 1600 × 1100 white-background export from the repository root:
 
 ```sh
-node frontend/scripts/export-incognito-architecture.mjs
+pnpm diagram:export
 ```
 
-The command records generation time, source/PNG SHA-256, browser and dimensions. Browser/font changes may change pixels. Real application figures appear in the [evidence catalog](../evidence/README.md).
+The [renderer](../../examples/incognito/scripts/export-incognito-architecture.mjs) records generation time, source/PNG SHA-256, browser and dimensions. Browser/font changes may change pixels. Real application figures appear in the [evidence catalog](../evidence/README.md).
 
-The [historical architecture catalog](pre-incognito-catalog.md) preserves earlier diagrams and their meaning. They are excluded from the current proposal. User-supplied artwork is retained separately; the reviewed Figure 1 source is `ccc-incognito-architecture.svg`.
+The checked-in PNG and metadata retain their original generation date and hashes. The `frontend/scripts/` command recorded in that metadata is the renderer's location at generation time; its current location is `examples/incognito/scripts/`. Moving the source does not recapture or redate existing evidence.
+
+Earlier diagrams and their catalogs remain in [Git history](../history.md). The reviewed Figure 1 source is `ccc-incognito-architecture.svg`.

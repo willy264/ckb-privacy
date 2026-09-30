@@ -6,11 +6,12 @@ The target is one optional CCC capability: `@ckb-ccc/stealth`. This checkout con
 
 ```sh
 pnpm install --frozen-lockfile
+pnpm typecheck
 pnpm build
 pnpm dev
 ```
 
-The demo defaults to an ordinary CCC send concept and offers an Incognito mode toggle. Turning it on changes the destination flow to a stealth meta-address; it does not hide the amount or sender inputs.
+The example lives in [`examples/incognito/`](../examples/incognito/README.md), with workspace name `@ccc-incognito/demo`. It imports reusable capabilities from `@ckb-ccc/stealth` and public fixtures from `@ckb-ccc/stealth/testing`; it does not import package source files or archived implementations. The demo defaults to an ordinary CCC send concept and offers an Incognito mode toggle. Turning it on changes the destination flow to a stealth meta-address; it does not hide the amount or sender inputs.
 
 ## Send flow
 
@@ -38,4 +39,10 @@ A real spend needs the verified lock dependency, its exact witness layout and si
 
 Route change to a fresh derived destination and inspect the finalized transaction, because generic fee completion can otherwise introduce a reusable change address. A fresh address does not hide the change amount or links through the transaction graph.
 
-Keep the disclosure panel visible: recipient linkage is the intended protection; **amounts and sender inputs are NOT hidden**. The [threat model](threat-model.md) covers view-key disclosure, compromised interfaces, and correlation limits.
+Keep the disclosure panel visible: recipient linkage is the intended protection; **amounts and sender inputs are NOT hidden**. The [security notes](security.md) cover view-key disclosure, compromised interfaces, and correlation limits.
+
+## Hosting and upstream preparation
+
+`pnpm build` produces `examples/incognito/dist`, which the root Vercel configuration serves. This hosts the simulated interface; it does not deploy a chain script. No environment variables or wallet secrets are needed.
+
+The contribution target is a CCC-scoped package. Agree its API and integration boundary with maintainers, verify the reused lock and witness format, then prepare the fork, tests, documentation, changeset, and upstream submission using CCC's contribution conventions. A local candidate, a submitted PR, and an accepted package are separate states. Mainnet use and a guaranteed merge are outside the current scope.

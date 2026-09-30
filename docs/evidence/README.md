@@ -19,16 +19,20 @@ Amounts and sender inputs are **not hidden**. Receiver unlinkability and fresh c
 ```sh
 pnpm install --frozen-lockfile
 pnpm build
-node frontend/scripts/export-incognito-architecture.mjs
-node frontend/scripts/capture-incognito-evidence.mjs
+pnpm diagram:export
+pnpm capture:evidence
 ```
 
-The [Playwright script](../../frontend/scripts/capture-incognito-evidence.mjs) starts and closes its own Vite preview server. It uses real UI controls, checks malformed inputs, mode switching, fresh addresses, nonmatching scan keys, spend simulation and 390px layout. `--check` runs the same assertions without replacing evidence. External/write requests are blocked and any attempt fails verification. Captures are taken at 1440 × 1000; full-page PNG heights vary. Nothing is injected into the UI or edited into the PNGs.
+The [Playwright script](../../examples/incognito/scripts/capture-incognito-evidence.mjs) starts and closes its own Vite preview server. It uses real UI controls, checks malformed inputs, mode switching, fresh addresses, nonmatching scan keys, spend simulation and 390px layout. `pnpm test:demo` runs the browser assertions without replacing evidence. External/write requests are blocked and any attempt fails verification. Captures are taken at 1440 × 1000; full-page PNG heights vary. Nothing is injected into the UI or edited into the PNGs.
 
 [Capture manifest](incognito-manifest.json) records the browser (chrome 153.0.8010.53), Playwright, Node, source URL, source/build fingerprints, base commit, dates, sizes and hashes. The base commit alone does not identify uncommitted source edits. Browser fonts and random one-time keys can change pixel hashes across runs. The dynamic localhost port is provenance, not a public service. [Diagram metadata](../diagrams/ccc-incognito-architecture.json) records authored artwork separately.
 
 These artifacts establish interface behavior and local computations, not a verified deployment, live testnet lifecycle, audit, published package or accepted CCC contribution. Live lock-specific signing and indexer scanning remain pending. Funding terms are maintained in the local canonical proposal.
 
+## Source relocation
+
+The figures above were captured before the repository restructuring. Their original PNGs, dates, hashes, and JSON metadata are unchanged. Source paths beginning with `frontend/` in the capture manifest refer to the source at capture time, recorded in commit `099c6ad`; the active example and its capture tools now live in `examples/incognito/`. Package internals have also been reorganized since that capture. The old fingerprints must not be interpreted as hashes of the current source or build. The commands above create a new capture from the current checkout and preserve prior files under ignored `.local/history/captures/`. Earlier committed versions remain in Git history.
+
 ## Prior evidence
 
-The [pre-incognito catalog](pre-incognito-catalog.md) and its original images, hashes and dates are retained as historical records. They are not figures for the current proposal.
+Earlier captures and their catalogs remain in [Git history](../history.md). They are outside the current review tree and are not figures for this proposal.

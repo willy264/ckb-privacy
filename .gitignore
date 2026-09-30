@@ -1,12 +1,17 @@
 # Dependencies
 node_modules/
 
+# Local history and working material; not part of the maintainer review tree.
+/.local/
+
 # Frontend build output
 dist/
 dist-ssr/
 coverage/
 *.tsbuildinfo
 .vite/
+*.timestamp-*.mjs
+*.timestamp-*.js
 
 # Rust / CKB build artifacts
 target/
@@ -35,6 +40,7 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 ~$*.docx
+~WRL*.tmp
 
 # Local tool caches
 .eslintcache
@@ -63,6 +69,9 @@ AGGRON_DEPLOYMENT.md
 PHASE4_ZK_PLAN.md
 CCC_MIGRATION_PLAN.md
 backend/data/
+archive/obscell/backend/data/
+archive/obscell/tests/failed_txs/
+archive/obscell/scripts/deployment_results.json
 
 # Zero-Knowledge Artifacts
 circuits/*.ptau
@@ -70,4 +79,9 @@ circuits/*_000*.zkey
 circuits/*.r1cs
 circuits/*.sym
 circuits/input.json
+archive/obscell/circuits/*.ptau
+archive/obscell/circuits/*_000*.zkey
+archive/obscell/circuits/*.r1cs
+archive/obscell/circuits/*.sym
+archive/obscell/circuits/input.json
 scratch/

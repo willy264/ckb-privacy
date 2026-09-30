@@ -3,16 +3,20 @@ import { readFileSync } from "node:fs";
 import { createECDH, createHash } from "node:crypto";
 import test from "node:test";
 import { ccc } from "@ckb-ccc/core";
+import * as stealth from "@ckb-ccc/stealth";
 import {
   TESTNET_STEALTH_LOCK, broadcastStealthTransaction, buildSendDraft,
-  createDemoIdentity, createFixturePayment, decodeStealthMetaAddress,
+  decodeStealthMetaAddress,
   deriveFreshChange, deriveSpendKey, deriveStealthPayment, encodeStealthMetaAddress,
   parseCapacity, prepareSpendDraft, scanStealthPayments,
-} from "../dist/index.js";
+} from "@ckb-ccc/stealth";
+import {
+  createDemoIdentity, createFixturePayment, deriveStealthPaymentForTest,
+} from "@ckb-ccc/stealth/testing";
 
 const vector = JSON.parse(readFileSync(new URL("./vector.json", import.meta.url), "utf8"));
 const identity = createDemoIdentity();
-const payment = () => deriveStealthPayment(identity.metaAddress, { ephemeralPrivateKey: vector.ephemeralKey });
+const payment = () => deriveStealthPaymentForTest(identity.metaAddress, vector.ephemeralKey);
 const key = (n) => `0x${BigInt(n).toString(16).padStart(64, "0")}`;
 const errorCode = (code) => (error) => error.code === code;
 
@@ -55,9 +59,9 @@ test("Node/OpenSSL independently verifies the double-hashed ECDH and spend publi
 
 test("ephemeral scalars reject zero, curve order and wrong lengths", () => {
   for (const secret of [key(0), "0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141"]) {
-    assert.throws(() => deriveStealthPayment(identity.metaAddress, { ephemeralPrivateKey: secret }), errorCode("INVALID_KEY"));
+    assert.throws(() => deriveStealthPaymentForTest(identity.metaAddress, secret), errorCode("INVALID_KEY"));
   }
-  assert.throws(() => deriveStealthPayment(identity.metaAddress, { ephemeralPrivateKey: "0x01" }), errorCode("INVALID_ENCODING"));
+  assert.throws(() => deriveStealthPaymentForTest(identity.metaAddress, "0x01"), errorCode("INVALID_ENCODING"));
 });
 
 test("fresh change and repeated sends use distinct one-time locks", () => {
@@ -148,4 +152,16 @@ test("spend preparation verifies authority and fresh change without marking a fi
 
 test("live broadcast fails closed", () => {
   assert.throws(() => broadcastStealthTransaction(), errorCode("LIVE_UNAVAILABLE"));
+});
+
+test("package entry points keep public fixture keys outside the reusable API", () => {
+  for (const demoOnly of ["createDemoIdentity", "createFixturePayment", "deriveStealthPaymentForTest"]) {
+    assert.ok(!(demoOnly in stealth), `${demoOnly} must require the testing entry point`);
+    assert.ok(!(demoOnly in stealth.ccc), `${demoOnly} must not leak through the CCC namespace`);
+  }
+  assert.equal(stealth.ccc.deriveStealthPayment, deriveStealthPayment);
+  assert.equal(stealth.ccc.deriveSpendKey, deriveSpendKey);
+  assert.equal(stealth.ccc.scanStealthPayments, scanStealthPayments);
+  assert.equal(stealth.ccc.buildSendDraft, buildSendDraft);
+  assert.notEqual(deriveStealthPayment(identity.metaAddress).address, deriveStealthPayment(identity.metaAddress).address);
 });

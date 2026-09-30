@@ -1,7 +1,0 @@
-packages:
-  - 'packages/*'
-  - 'circuits'
-  - 'examples/*'
-  - 'mixer-sdk'
-  - 'frontend'
-  - 'backend'

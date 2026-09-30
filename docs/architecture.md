@@ -23,6 +23,8 @@ flowchart TD
 
 The contribution target is a scoped package inside CCC. This repository provides a private local candidate and demo; neither publication nor upstream acceptance is claimed.
 
+The active workspace has two members: `packages/stealth` contains the reusable modules, while `examples/incognito` contains the application, its state and views, and browser evidence tooling. The application imports the public package entry points. Public demo identities and deterministic test helpers are isolated in `@ckb-ccc/stealth/testing`. Earlier implementations are retained in [Git history](history.md), outside the current review tree and builds.
+
 ## Send
 
 The recipient publishes a meta-address containing a view public key and a spend public key. The sender uses a fresh ephemeral key to derive a one-time destination and the ephemeral public key needed for recognition. Public announcements and lock arguments must match the reused lock's exact byte layout.

@@ -1,29 +1,19 @@
-# CCC Incognito Mode Documentation
+# Documentation
 
-The current project is one opt-in CCC package, working name `@ckb-ccc/stealth`, for stealth send, scan, and spend plus fresh-change handling. It targets a contribution to CCC, reusing the Obscell stealth lock rather than creating new on-chain machinery.
+Start with the [maintainer review guide](review-guide.md). The runnable code is the private `@ckb-ccc/stealth` candidate and its [Incognito example](../examples/incognito/README.md).
 
-The runnable interface is **SIMULATED**. Local address derivation and CCC draft construction are implementation evidence; fixture detection, transaction completion, signing, and settlement must not be presented as real chain activity. Amounts and sender inputs are **not hidden**.
-
-| Document | Purpose |
+| Document | What it answers |
 |---|---|
-| [Status](status.md) | Implemented local behavior and unfinished live integration |
-| [Architecture](architecture.md) | App, optional CCC package, existing CCC capabilities, reused lock |
-| [Package guide](sdk.md) | Package boundary and local API |
-| [Integration guide](integration-guide.md) | Send, scan, spend, and application-owned approval |
-| [Research](research.md) | Reuse decisions, attribution, and compatibility questions |
-| [Threat model](threat-model.md) | Receiver privacy, keys, transaction graph, and interface risks |
-| [Security assumptions](security/security-assumptions.md) | Preconditions and limits |
-| [Trust model](security/trust-model.md) | Chain, application, signer, and scanner roles |
-| [Security invariants](security/protocol-invariants.md) | Rules to preserve through integration |
-| [Attack surface](security/attack-surface.md) | Input, scanning, signing, and delivery boundaries |
-| [Test report](test-report.md) | Current checks and their evidence limits |
-| [Test vectors](test-vectors.md) | Codec, derivation, recognition, and mutation coverage |
-| [Deployment](deployment.md) | Local hosting, testnet acceptance, and upstream path |
-| [Testnet runbook](pudge-runbook.md) | Future real send → scan → spend verification |
-| [Known limitations](known-limitations.md) | Explicit implementation and privacy gaps |
-| [Implementation report](implementation-report.md) | How the repository changed direction |
-| [Evidence catalog](evidence/README.md) | Real captures, simulation labels, dates, and hashes |
-| [Architecture assets](diagrams/README.md) | Target diagrams and reproducible sources |
-| [Historical documentation](archive/pre-incognito/README.md) | Superseded research, specifications, and dated results |
+| [Review guide](review-guide.md) | Where to read the code and which CCC integration decisions need feedback |
+| [Architecture](architecture.md) | How the package, application, CCC client/signer, and reused lock relate |
+| [Package API](../packages/stealth/README.md) | Exports, a runnable local example, formats, and module responsibilities |
+| [Integration](integration-guide.md) | Send, recognition, spend, and transaction-completion boundaries |
+| [Security](security.md) | Privacy limits, key handling, ownership checks, and pending signing verification |
+| [Status](status.md) | Implemented behavior versus pending live integration |
+| [Validation](validation.md) | Reproduction commands, executed checks, and evidence limits |
+| [Research and attribution](research.md) | Reused sources and unresolved compatibility questions |
+| [Evidence](evidence/README.md) | Four current demo screenshots, dates, and hashes |
+| [Architecture artwork](diagrams/README.md) | Current target diagram and its source |
+| [History](history.md) | Earlier work retained outside the current review tree |
 
-The old [versioned specification](protocol-v1.md) remains a historical pointer. Dated `progress/` files and archived evidence are preserved as history. Their terminology, results, milestones, and deployments are not current claims. Funding materials are intentionally excluded from tracked public documentation.
+Local computations are real; chain-dependent demo steps remain **SIMULATED**. Amounts and sender inputs are public. Funding documents are local and excluded from this public documentation.

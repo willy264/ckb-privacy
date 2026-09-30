@@ -40,4 +40,4 @@ The disclosure panel is part of the design because the privacy boundary must rem
 
 ## Historical research
 
-The [pre-incognito research record](archive/pre-incognito/research.md) preserves previous alternatives, measurements, and their dated limitations. Related source folders and `progress/` remain historical records. Their measurements are not rerun or repurposed as evidence for the current package.
+Earlier alternatives, measurements, implementations, and progress reports remain in [Git history](history.md). Their measurements are not rerun or repurposed as evidence for the current package.

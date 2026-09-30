@@ -3,27 +3,21 @@
   "private": true,
   "version": "0.1.0",
   "packageManager": "pnpm@10.32.1",
+  "engines": { "node": ">=24" },
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter frontend dev",
-    "build": "pnpm --filter @ckb-ccc/stealth build && pnpm --filter frontend build",
-    "build:frontend": "pnpm --filter frontend build",
+    "dev": "pnpm build:stealth && pnpm --parallel --filter @ckb-ccc/stealth --filter @ccc-incognito/demo dev",
+    "build": "pnpm build:demo",
+    "build:demo": "pnpm --filter @ccc-incognito/demo build",
     "build:stealth": "pnpm --filter @ckb-ccc/stealth build",
     "test:stealth": "pnpm --filter @ckb-ccc/stealth test",
-    "test:backend:v1": "pnpm --filter ckb-mixer-backend test:v1",
-    "test:circuits": "pnpm --filter circuits test",
-    "test:consumer": "pnpm --filter obscell-payment-example test",
-    "test": "pnpm run test:stealth && pnpm --filter frontend test:demo",
-    "build:legacy": "pnpm --filter mixer-sdk build && pnpm --filter ckb-mixer-backend build && pnpm --filter obscell-payment-example build",
-    "test:legacy": "pnpm --filter mixer-sdk test && pnpm run test:backend:v1 && pnpm run test:circuits && pnpm run test:consumer",
-    "dev:consumer": "pnpm --filter obscell-payment-example dev",
-    "preview": "pnpm --filter frontend preview",
-    "capture:evidence": "pnpm --filter frontend capture:evidence",
-    "build:contracts": "node scripts/run-contract-tests.mjs --build-only",
-    "test:contracts": "node scripts/run-contract-tests.mjs"
+    "test": "pnpm test:structure && pnpm test:stealth && pnpm test:demo",
+    "test:structure": "node scripts/check-workspace.mjs",
+    "test:demo": "pnpm --filter @ccc-incognito/demo test:demo",
+    "typecheck": "pnpm build:stealth && pnpm --filter @ccc-incognito/demo typecheck",
+    "preview": "pnpm --filter @ccc-incognito/demo preview",
+    "capture:evidence": "pnpm --filter @ccc-incognito/demo capture:evidence",
+    "diagram:export": "pnpm --filter @ccc-incognito/demo diagram:export"
   },
-  "dependencies": {
-    "@ckb-ccc/core": "^1.12.5",
-    "dotenv": "^16.6.1"
-  }
+  "devDependencies": { "typescript": "^5.9.3" }
 }
