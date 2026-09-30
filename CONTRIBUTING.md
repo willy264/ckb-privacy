@@ -35,6 +35,14 @@ pnpm --filter @ccc-incognito/demo exec playwright install chromium
 
 Add focused tests when changing cryptographic formats, ownership validation, public exports, or transaction boundaries. Preserve independent known-answer vectors and fail-closed behavior for unavailable live operations. Do not substitute local fixture matches for chain confirmation.
 
+## GitHub checks
+
+The `CCC Stealth Package and Demo` workflow runs the workspace, package, build, and browser checks. GitHub CodeQL uses default setup and scans **GitHub Actions** and **JavaScript/TypeScript** for the current source tree. Its language selection is a repository setting, not part of the package workflow.
+
+An older scan can still contain C/C++ or Rust jobs from before the project restructuring. A "no source files found" failure for those retired languages describes the old scan configuration. Check the run's commit and the repository's current CodeQL language selection; use a fresh analysis with the current selection instead of restoring archived source files. Updating the selection applies to future analyses and does not change the outcome of an already completed run. See [GitHub's default setup documentation](https://docs.github.com/en/code-security/concepts/code-scanning/setup-types).
+
+Vercel is a separate deployment check. Its project must use the repository root and the committed build configuration; see the [hosting settings](docs/integration-guide.md#hosting-and-upstream-preparation). A passing package/browser workflow does not establish that a hosted deployment succeeded.
+
 ## Evidence and privacy claims
 
 Amounts and sender inputs remain public. Keep the disclosure and **SIMULATED** labels visible. Never invent transaction hashes, confirmations, or settlement; public fixture keys must never receive assets.
