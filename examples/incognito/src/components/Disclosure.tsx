@@ -23,12 +23,13 @@ export function Disclosure({ incognito, expanded = false }: { incognito: boolean
         </div>
         <div><dt>Transfer amount</dt><dd>NOT HIDDEN</dd></div>
         <div><dt>Sender inputs</dt><dd>NOT HIDDEN</dd></div>
+        <div><dt>Outputs & transaction graph</dt><dd>OBSERVABLE</dd></div>
         <div><dt>Ephemeral public key</dt><dd>{incognito ? 'PUBLIC' : 'NOT USED'}</dd></div>
         <div><dt>Timing & network metadata</dt><dd>NOT PROTECTED</dd></div>
       </dl>
       <div className="disclosure-note">
         <Info size={17} />
-        <p>Stealth addresses target <strong>receiver unlinkability</strong>. Amount, timing and network correlation can still reveal relationships.</p>
+        <p>Stealth addresses <strong>reduce direct recipient linkage</strong>. Amount, timing, network and transaction-graph analysis can still reveal relationships.</p>
       </div>
       {expanded && (
         <div className="disclosure-explanation">

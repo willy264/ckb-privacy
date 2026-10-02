@@ -3,6 +3,9 @@ import { createDemoIdentity, createFixturePayment, deriveStealthPaymentForTest }
 
 // Public fixture keys only. Never use these identities or addresses for funds.
 export const demoIdentity = createDemoIdentity();
+// A second public viewing scalar demonstrates a nonmatching fixture profile.
+// Neither profile accepts a user's private viewing information.
+export const unrelatedDemoViewKey = `0x${'0'.repeat(63)}4`;
 export const localClient = new ccc.ClientPublicTestnet();
 
 const normalLock = ccc.Script.from({

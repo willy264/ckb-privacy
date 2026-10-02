@@ -7,6 +7,7 @@ type Payment = ReturnType<typeof deriveStealthPayment>;
 
 export function useSendDemo() {
   const [incognito, setIncognito] = useState(false);
+  const [freshChange, setFreshChange] = useState(true);
   const [metaAddress, setMetaAddress] = useState<string>(demoIdentity.metaAddress);
   const [normalAddress, setNormalAddress] = useState(normalDemoAddress);
   const [amount, setAmount] = useState('200');
@@ -52,6 +53,16 @@ export function useSendDemo() {
     clearDraft();
   }
 
+  function toggleFreshChange() {
+    setFreshChange(value => !value);
+    // Keep the recipient derivation; only the transaction/change draft is stale.
+    buildVersion.current += 1;
+    setDraft(undefined);
+    setChange(undefined);
+    setError('');
+    setBusy(false);
+  }
+
   function derive() {
     clearDraft();
     try {
@@ -76,7 +87,7 @@ export function useSendDemo() {
 
       // Ignore an outdated async address parse if the form or mode has changed.
       if (version !== buildVersion.current) return;
-      setChange(incognito ? deriveFreshChange(demoIdentity.metaAddress) : undefined);
+      setChange(incognito && freshChange ? deriveFreshChange(demoIdentity.metaAddress) : undefined);
       setDraft(serializeOutputDraft(transaction));
     } catch (cause) {
       if (version !== buildVersion.current) return;
@@ -90,6 +101,7 @@ export function useSendDemo() {
 
   function reset() {
     setIncognito(false);
+    setFreshChange(true);
     setMetaAddress(demoIdentity.metaAddress);
     setNormalAddress(normalDemoAddress);
     setAmount('200');
@@ -97,9 +109,9 @@ export function useSendDemo() {
   }
 
   return {
-    incognito, metaAddress, normalAddress, amount, payment, change, draft, error, busy,
+    incognito, freshChange, metaAddress, normalAddress, amount, payment, change, draft, error, busy,
     toggleMode, useDemoRecipient, updateMetaAddress, updateNormalAddress, updateAmount,
-    derive, buildDraft, reset,
+    derive, buildDraft, reset, toggleFreshChange,
   };
 }
 
