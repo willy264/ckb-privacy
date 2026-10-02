@@ -1,0 +1,12 @@
+<!-- CCC assets/logo.svg at 3d11c1ed2be6764624ab2b70de2a485eb3a6c93b.
+     Rendering preserved; editor metadata and unused IDs removed.
+     https://github.com/ckb-devrel/ccc/blob/3d11c1ed2be6764624ab2b70de2a485eb3a6c93b/assets/logo.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 125.67109 125.67109">
+  <defs><radialGradient id="ccc-logo-gradient" cx="100" cy="100" r="62.835545" gradientUnits="userSpaceOnUse" gradientTransform="translate(-20,-20)"><stop offset="0" stop-color="#5bcefa"/><stop offset=".59409446" stop-color="#5bcefa"/><stop offset=".77274024" stop-color="#5bcefa" stop-opacity=".64591813"/></radialGradient></defs>
+  <g transform="translate(-17.164455,-17.164455)">
+    <circle cx="80" cy="80" r="60.335545" fill="#fff"/>
+    <circle cx="80" cy="80" r="60.335545" fill="url(#ccc-logo-gradient)" stroke="#313244" stroke-width="5"/>
+    <circle cx="-79.999969" cy="80.004433" r="39.209988" transform="rotate(-90)" fill="none" stroke="#4c4c4c" stroke-width="6.741" stroke-linejoin="round" stroke-dasharray=".6741,23.2854,.6741,0"/>
+    <path d="M 80.1558,38.91905 A 121.21683,121.21682 0 0 0 72.58314,80.209553 121.21683,121.21682 0 0 0 79.99974,121.08095 121.21683,121.21682 0 0 0 87.416859,80.209553 121.21683,121.21682 0 0 0 80.1558,38.91905 Z" fill="#1e1e2e" stroke="#1e1e2e" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+</svg>
