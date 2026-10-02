@@ -25,6 +25,14 @@ The contribution target is a scoped package inside CCC. This repository provides
 
 The active workspace has two members: `packages/stealth` contains the reusable modules, while `examples/incognito` contains the application, its state and views, and browser evidence tooling. The application imports the public package entry points. Public demo identities and deterministic test helpers are isolated in `@ckb-ccc/stealth/testing`. Earlier implementations are retained in [Git history](history.md), outside the current review tree and builds.
 
+## CCC UI proof of concept
+
+The example's `src/ccc` boundary adapts the shell and controls of CCC's `packages/demo` at the core 1.12.5 release. [Source provenance](../examples/incognito/CCC_UPSTREAM.md) identifies the exact baseline and substitutions. The existing Vite runtime is retained; no second wallet, router or cryptographic abstraction is introduced.
+
+`App.tsx` applies one Incognito state to sending, the receiving identity and Receive. Normal mode shows the reusable CKB address. Incognito mode shows the public meta-address and fixture-recognition flow. Switching modes invalidates send drafts and cancels pending scans; disconnecting the simulated account resets both flows. Viewing profiles are selected from public fixtures, with no private-key entry. The comparison panel changes neither the account nor its transaction state.
+
+The local CCC controls construct unsigned previews. The upstream wallet provider, live balances, input/fee completion and broadcast handlers are deliberately outside this visual integration. The [demo guide](ccc-ui-demo.md) separates the real local computations from simulated account and chain behavior.
+
 ## Send
 
 The recipient publishes a meta-address containing a view public key and a spend public key. The sender uses a fresh ephemeral key to derive a one-time destination and the ephemeral public key needed for recognition. Public announcements and lock arguments must match the reused lock's exact byte layout.

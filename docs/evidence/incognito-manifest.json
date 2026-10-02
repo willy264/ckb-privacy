@@ -1,71 +1,211 @@
 {
-  "schema": "ccc-incognito-evidence-v1",
-  "capturedAtUtc": "2026-09-29T16:03:55.285Z",
+  "schema": "ccc-incognito-evidence-v2",
+  "capturedAtUtc": "2026-10-02T14:25:13.067Z",
   "command": "pnpm capture:evidence",
-  "baseCommit": "1c076907ee8fd12677e4f82a7396d30ba5834aaf",
+  "baseCommit": "97a451bcc139b1a7151f08a4a3b588ab1775a4df",
   "workingTree": "dirty",
   "sourceFingerprint": [
     {
-      "file": "frontend/dist/assets/index-CiJJ9QCS.css",
-      "sha256": "30de1671b33a0a68ea56840af3353acfd4641f3a8e70c461972e77434e425ac0"
+      "file": "examples/incognito/dist/assets/index-Bq2rB_N-.js",
+      "sha256": "b7fa5b1bd19f5941b53e8931ff12b072a785325ee73bbbe1cc3783e4cfc0fc1f"
     },
     {
-      "file": "frontend/dist/assets/index-Cy8PUFLS.js",
-      "sha256": "ff3ad7637e856534b96812748c7545af923828fcc431afd956ad31e3da0e882b"
+      "file": "examples/incognito/dist/assets/index-DsG95zDG.css",
+      "sha256": "5d94cc7c9efc3a0eac2860d5626633ec0a3d8a41b813dfdf9717d574a8887dc9"
     },
     {
-      "file": "frontend/dist/index.html",
-      "sha256": "be6cb54cdb6ddc7f06cd3f39abba082f4d9908e115d1c5fdf78a8f78a68bc34b"
+      "file": "examples/incognito/dist/index.html",
+      "sha256": "0dedb0d7445c1b7c5bba1226aec9ddb94ebae50807f14b716441213328ad456b"
     },
     {
-      "file": "frontend/package.json",
-      "sha256": "471a303e93e667c0bfb1f95ef50afbbd9b2a93ba6ffe726068cb9649cb8d975d"
+      "file": "examples/incognito/package.json",
+      "sha256": "0f8de2043612ccb787a65eba44716a6f4b959e4c9973fff1c39679ac3f847292"
     },
     {
-      "file": "frontend/scripts/capture-incognito-evidence.mjs",
-      "sha256": "8aea678b53a2d3b33cd8b3d0633d4157a0a982a700c7f49e1e9dc867b439e191"
+      "file": "examples/incognito/scripts/capture-incognito-evidence.mjs",
+      "sha256": "b118ee18ae86e87bc2c61b4042eb52ecd0d875d4149a74428c63e371b86da6a3"
     },
     {
-      "file": "frontend/src/App.tsx",
-      "sha256": "00a31f7ad1a5f83da761dc7e9eae0f134af7beb7bf56b02f8799ccfcf50ecfb3"
+      "file": "examples/incognito/src/App.tsx",
+      "sha256": "b8bd26d8d151c017a4d79e0b6b0ab2eb976fae9e262f6b5f0df247a4cd822979"
     },
     {
-      "file": "frontend/src/index.css",
-      "sha256": "073d390f047d3084b4a5b7e422383054bc5a1876b9ea0cc0a4b93c61dfeda623"
+      "file": "examples/incognito/src/ccc/CccControls.tsx",
+      "sha256": "0eb6deb75915d88ffcb2b3e658c5bc55ea1f5dc2c615b3b8b2dd053cb3d915d8"
     },
     {
-      "file": "frontend/src/main.tsx",
-      "sha256": "73c4e0aa94725379c5766cd8be6af297ddf3d8fd4423fa3821302bb1b2813f90"
+      "file": "examples/incognito/src/ccc/CccDemoShell.tsx",
+      "sha256": "6e0249bd310016a73af5637427c6ed482c932297877ee57c591e56bf327f850f"
     },
     {
-      "file": "frontend/src/vite-env.d.ts",
-      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      "file": "examples/incognito/src/ccc/ccc.css",
+      "sha256": "691f616dc7a174320667d1edebe0283de023b7098393378b7522f9833f1f9c29"
     },
     {
-      "file": "frontend/vite.config.ts",
-      "sha256": "53fd02d71d44517e63dc09af4d36c09a464c440d9a631fc83c5377ac58ee9139"
+      "file": "examples/incognito/src/ccc/logo.svg",
+      "sha256": "b45e172e0b85728d136542023027c1c06d81ba2b2e85ff36b3f524605bcd080a"
+    },
+    {
+      "file": "examples/incognito/src/components/Badge.tsx",
+      "sha256": "5bd9e3db6d34bde06a6fd1fec941b077c8494f34823e7faebd21f9a73f7f7db3"
+    },
+    {
+      "file": "examples/incognito/src/components/ChangeHygiene.tsx",
+      "sha256": "95bb3b97dcc6e44231753f0505e4d9afd16a3814bb0d08d7a7e9b99353a36d5c"
+    },
+    {
+      "file": "examples/incognito/src/components/CodeValue.tsx",
+      "sha256": "be69493d25ec1388ee6683cf62ea43e390a6abeb6e17e72c12039a9e27074623"
+    },
+    {
+      "file": "examples/incognito/src/components/Disclosure.tsx",
+      "sha256": "eb2c4b9bfc04b3f2b007ce3ed461e290e5bc0606a6042d7961713bf812461110"
+    },
+    {
+      "file": "examples/incognito/src/components/Handoff.tsx",
+      "sha256": "e62b942cb6a079409b6fb47ae78a4b18603e0355962038e379b351dcb7f828f7"
+    },
+    {
+      "file": "examples/incognito/src/components/ModeComparison.tsx",
+      "sha256": "f9bf6e039fd34293cfe5eb8a02480a7e65ea2417d11e89e96d376c1bb86c5b52"
+    },
+    {
+      "file": "examples/incognito/src/components/ReceivingIdentity.tsx",
+      "sha256": "a2524a96fe7f108fe47def7893957200da8884f8db68fe6b47ff99c3e05c3af7"
+    },
+    {
+      "file": "examples/incognito/src/demo/fixtures.ts",
+      "sha256": "6eb11aac7dc698479af7f0dfd3faa2d34931633108a3bcdeae046f75b65a9d70"
+    },
+    {
+      "file": "examples/incognito/src/demo/transactions.ts",
+      "sha256": "d5eef166fc6572640b50e09830dff5c52e6abe641fde3f1a9738216d84e0cfd3"
+    },
+    {
+      "file": "examples/incognito/src/hooks/useReceiveDemo.ts",
+      "sha256": "4474c9837099c246f2962a9e58c42b298d5fe06c584979894abea72bd3b8fec5"
+    },
+    {
+      "file": "examples/incognito/src/hooks/useSendDemo.ts",
+      "sha256": "e40a9b166b7eacb10acd16e7d257354e23764b6ce4aaaece066969db9f8675aa"
+    },
+    {
+      "file": "examples/incognito/src/index.css",
+      "sha256": "f5ba5ff2955e1739ee549fc4885fe34c5807a57513234e036a47eccac8b9d5ae"
+    },
+    {
+      "file": "examples/incognito/src/main.tsx",
+      "sha256": "629f36114e7f1f00c11b4b7b64c82830de1c30be92b9f144950d415f46e16efd"
+    },
+    {
+      "file": "examples/incognito/src/views/ReceiveView.tsx",
+      "sha256": "937ddf735a59dab9b1ad7322a3b2b03c5b1dd43e48e692d2c6edeec51002c127"
+    },
+    {
+      "file": "examples/incognito/src/views/SendView.tsx",
+      "sha256": "22e833f0fce44d5fd0dc2d9915cdf59176d33a4337dc7bc115d975474d02bcb4"
+    },
+    {
+      "file": "examples/incognito/src/vite-env.d.ts",
+      "sha256": "424faf9241dd699dda995b367ed36665732da1e6ec1f33b2fd40394488ecac92"
+    },
+    {
+      "file": "examples/incognito/vite.config.ts",
+      "sha256": "04ab4224c04e91af7589e37134fd526536db419b599b22d7fab3063050f2e0ea"
     },
     {
       "file": "packages/stealth/package.json",
-      "sha256": "95144524f897a5cd5eda9902ea0ffdf903990fdfec54620fed5dd24f8e3c0066"
+      "sha256": "2bb76248f9376a42ee96d0598a2fa2dc383ae56f584544e431eb74939fc62ca1"
+    },
+    {
+      "file": "packages/stealth/src/barrel.ts",
+      "sha256": "b09057e2854313e81f90f2b044384acd72b07b6f57e424559fd80ad7c40efcca"
+    },
+    {
+      "file": "packages/stealth/src/capacity.ts",
+      "sha256": "ab696a6a78f1cc2e11635c872e79a687fee3424062fd59445127e6c3418b6d56"
+    },
+    {
+      "file": "packages/stealth/src/change.ts",
+      "sha256": "7210b3886866d7000b20fe638ac5a065f28bf865705875a9f2ebbb8cf1bce720"
+    },
+    {
+      "file": "packages/stealth/src/constants.ts",
+      "sha256": "2f01c21175fce0b514118bb89b4444df565149972ea44e2044b83b1d850bbd7f"
+    },
+    {
+      "file": "packages/stealth/src/derivation.ts",
+      "sha256": "65a994a4ec406ecbf170d1e3c45d3a79478dac612c43dd9806c8239ad412b705"
+    },
+    {
+      "file": "packages/stealth/src/disclosure.ts",
+      "sha256": "95bf6b292382f1a476e0704fb14cfe6223e1bfa78c6e003b81caf423722d09f6"
+    },
+    {
+      "file": "packages/stealth/src/errors.ts",
+      "sha256": "9b0409fbf60eebe2dd11a11a5ef1fe7e384b84b3a5fc71464cdb7022afd6544a"
     },
     {
       "file": "packages/stealth/src/index.ts",
-      "sha256": "858ed10fd2d109b28afc630e70edf3eebe84d88a33ca78e586da3e28c9330e92"
+      "sha256": "850760216afab75ebffccf66b38749907b9b9159d427dec3b550e57b1ec674c0"
+    },
+    {
+      "file": "packages/stealth/src/internal/curve.ts",
+      "sha256": "7b5c1561c71fe6b364c5d4236660da30a3c63bf620da986ec5d6f4339e80c2cb"
+    },
+    {
+      "file": "packages/stealth/src/internal/derive-payment.ts",
+      "sha256": "ff7126d58f6846f31fb9748bd8286016245430131cdb94fad22f1edfa0cd6efb"
+    },
+    {
+      "file": "packages/stealth/src/internal/encoding.ts",
+      "sha256": "2514e18570c98dc16de47dd6f9406ca9994c582001e19263cec94f237fd4f027"
+    },
+    {
+      "file": "packages/stealth/src/internal/lock.ts",
+      "sha256": "465e9005b2c668df0832b5e9a448ef099218e9571edf513c623c3d6c4e420203"
+    },
+    {
+      "file": "packages/stealth/src/meta-address.ts",
+      "sha256": "e25e6d6764511ca9d1b7d404e2e760997d15532a11d6afeb388c31660d81397e"
+    },
+    {
+      "file": "packages/stealth/src/scan.ts",
+      "sha256": "d59a2979ce9ee713d5a80a04d0ed186c596aafb450913cd1eb43f121b51ef15f"
+    },
+    {
+      "file": "packages/stealth/src/spend.ts",
+      "sha256": "d199c329011b9eb00595a8d20137e33306838f13d62ecc64a2a8755b709f84b1"
+    },
+    {
+      "file": "packages/stealth/src/testing/fixtures.ts",
+      "sha256": "4dba3b082268b4bd413c3afa03d86980495ac10e1b4156895445c3b89f7227b1"
+    },
+    {
+      "file": "packages/stealth/src/testing/index.ts",
+      "sha256": "cc44d35bf1f93dd2ccc89b2d94cfe5db2acaebb567d2ddfd3000f43ecef3eb34"
+    },
+    {
+      "file": "packages/stealth/src/transactions.ts",
+      "sha256": "27767e1ba75a876e40e1c682c0c2cfdabaf0b2ea870d56eae278e513c5f99645"
+    },
+    {
+      "file": "packages/stealth/src/types.ts",
+      "sha256": "83feffe26d8a7a0d18c441eae12331d5fb47669c6ffeb8a6f37f17d554c7775a"
     },
     {
       "file": "pnpm-lock.yaml",
-      "sha256": "99f2b53eff3b6be5170c875225c496d99aa1c9571bd6854f0655d2480de7cc64"
+      "sha256": "2dad710abce8e449001dd079cf5277e2dd5f580b7144565aa55affa661c2f813"
     }
   ],
-  "sourceFingerprintSha256": "033bd298bc0be2df8552eb936254f8248324324e15de7f23294a3146eecba088",
+  "sourceFingerprintSha256": "f5ab29a74caab2759786fa23fd1aefef57fbb5847389d73ccf2a683c989460ed",
   "browser": {
     "channel": "chrome",
     "version": "153.0.8010.53"
   },
   "playwright": "1.55.1",
   "node": "v25.8.1",
-  "sourceUrl": "http://127.0.0.1:49933/",
+  "sourceUrl": "http://127.0.0.1:65462/",
   "viewport": {
     "width": 1440,
     "height": 1000
@@ -79,13 +219,27 @@
   "signatures": 0,
   "broadcasts": 0,
   "chainEvidence": "None. Local fixtures only.",
+  "accountState": "Public demo account only; connect/disconnect controls simulate account state.",
+  "checks": [
+    "Normal/Incognito receiving identities",
+    "Actual clipboard copy",
+    "Malformed recipients and invalid capacity",
+    "Fresh one-time destinations",
+    "Optional fresh change",
+    "Matching/nonmatching fixture profiles",
+    "Scan cancellation on profile/mode/reset",
+    "Unspent fixture after spend preview",
+    "390px layouts",
+    "Demo account disconnect/reconnect",
+    "No external requests or private key input"
+  ],
   "captureIntegrity": "Actual UI controls, no page mocks, DOM replacement, fake chain identifiers or edited pixels.",
   "files": [
     {
       "name": "incognito-overview.png",
-      "description": "Incognito toggle OFF: normal CCC send, scope banner and disclosure panel. SIMULATED target flow.",
-      "capturedAtUtc": "2026-09-29T16:03:51.781Z",
-      "sourceUrl": "http://127.0.0.1:49933/",
+      "description": "Normal mode: adapted CCC demo shell, public demo account, reusable receiving address and normal send. SIMULATED account; no wallet connection.",
+      "capturedAtUtc": "2026-10-02T14:25:06.525Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
       "source": "Local Vite preview of actual application",
       "viewport": {
         "width": 1440,
@@ -93,16 +247,67 @@
       },
       "dimensions": {
         "width": 1440,
-        "height": 1640
+        "height": 1554
       },
-      "sha256": "831ff44cae921ea87e8d2dcf737908cbe90ec24239d9e17e57512b9ced67636f",
-      "bytes": 141047
+      "sha256": "2474c7cd4a89bd62cc61a0d0d278f8e19cf217e1e0912cea8b9007dca519faf8",
+      "bytes": 138526
+    },
+    {
+      "name": "incognito-enabled.png",
+      "description": "Incognito enabled inside the same CCC demo shell: a public stealth receiving identity replaces the reusable address. Prototype capability, not official upstream CCC functionality.",
+      "capturedAtUtc": "2026-10-02T14:25:07.478Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1553
+      },
+      "sha256": "07452885d11bcc6c457defc0f042c6243c2ac43794d3802cdcb19be01013a757",
+      "bytes": 150432
+    },
+    {
+      "name": "incognito-identity.png",
+      "description": "Stealth receiving identity and local fixture profile before scanning. The shared identity contains public keys; the demo accepts no private viewing key.",
+      "capturedAtUtc": "2026-10-02T14:25:07.869Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1553
+      },
+      "sha256": "5d2e37fca959550d436f6686df50d150202af2934670871683131532e2edfa73",
+      "bytes": 147467
+    },
+    {
+      "name": "incognito-comparison.png",
+      "description": "Normal versus Incognito comparison within the same application: reusable receiving address versus public stealth identity and fresh one-time destinations. Amounts and sender inputs remain public.",
+      "capturedAtUtc": "2026-10-02T14:25:08.210Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
+      "source": "Local Vite preview of actual application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "dimensions": {
+        "width": 1440,
+        "height": 1933
+      },
+      "sha256": "0c537e804a5d4392b4b70893b92076334bbeaaa36e43a8b52c026f321c9e6dc4",
+      "bytes": 164292
     },
     {
       "name": "incognito-send.png",
       "description": "Incognito ON: locally derived one-time address and ephemeral public key, actual unsigned CCC output, SIMULATED completion/signing and fresh change.",
-      "capturedAtUtc": "2026-09-29T16:03:53.029Z",
-      "sourceUrl": "http://127.0.0.1:49933/",
+      "capturedAtUtc": "2026-10-02T14:25:09.158Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
       "source": "Local Vite preview of actual application",
       "viewport": {
         "width": 1440,
@@ -110,16 +315,16 @@
       },
       "dimensions": {
         "width": 1440,
-        "height": 1884
+        "height": 1837
       },
-      "sha256": "0beb342da8f7b8bebdf73fe993ffee5876d6a5f19035a915fd6f0751a0155e48",
-      "bytes": 211347
+      "sha256": "35ed9c9d67f77f53aad8d24703f3feaa2aeb78e1357716dc8bb99e7f53ee9c38",
+      "bytes": 192942
     },
     {
       "name": "incognito-receive.png",
       "description": "View-key scan of two public local fixtures: one detected incoming payment, one nonmatching output, Spend simulation action. No chain scan.",
-      "capturedAtUtc": "2026-09-29T16:03:54.020Z",
-      "sourceUrl": "http://127.0.0.1:49933/",
+      "capturedAtUtc": "2026-10-02T14:25:10.834Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
       "source": "Local Vite preview of actual application",
       "viewport": {
         "width": 1440,
@@ -127,16 +332,16 @@
       },
       "dimensions": {
         "width": 1440,
-        "height": 1640
+        "height": 1553
       },
-      "sha256": "6ad07c819f9b3d07941b9de95bf53de5731acff394de2305d78465d97dfc64eb",
-      "bytes": 180618
+      "sha256": "36bb84101cf41b9203d7a0dd4ff2adaa183b0cb27b1cd2c47fe69f890c175647",
+      "bytes": 163628
     },
     {
       "name": "incognito-disclosure.png",
-      "description": "Disclosure of recipient unlinkability limits: amounts, sender inputs, ephemeral key, timing/network exposure and fresh-change caveats. SIMULATED target flow.",
-      "capturedAtUtc": "2026-09-29T16:03:54.945Z",
-      "sourceUrl": "http://127.0.0.1:49933/",
+      "description": "Disclosure of reduced recipient linkage and its limits: amounts, sender inputs, visible outputs, ephemeral key, timing/network exposure and fresh-change caveats. SIMULATED target flow.",
+      "capturedAtUtc": "2026-10-02T14:25:11.679Z",
+      "sourceUrl": "http://127.0.0.1:65462/",
       "source": "Local Vite preview of actual application",
       "viewport": {
         "width": 1440,
@@ -144,10 +349,10 @@
       },
       "dimensions": {
         "width": 1440,
-        "height": 1319
+        "height": 1443
       },
-      "sha256": "b3bcd507025dd8e7081aa4ed95b441300a75f495b8bc3c17fba5ea6d3a4981a2",
-      "bytes": 147243
+      "sha256": "77cadc3e28414b0f1f4559f057285cb238fc5c01731ec8dc17bdcd6b52b6e6df",
+      "bytes": 130952
     }
   ]
 }
