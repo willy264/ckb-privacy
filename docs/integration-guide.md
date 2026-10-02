@@ -13,6 +13,8 @@ pnpm dev
 
 The example lives in [`examples/incognito/`](../examples/incognito/README.md), with workspace name `@ccc-incognito/demo`. It imports reusable capabilities from `@ckb-ccc/stealth` and public fixtures from `@ckb-ccc/stealth/testing`; it does not import package source files or archived implementations. The demo defaults to an ordinary CCC send concept and offers an Incognito mode toggle. Turning it on changes the destination flow to a stealth meta-address; it does not hide the amount or sender inputs.
 
+The [current UX integration](ccc-ui-demo.md) also applies the toggle to the account's copyable receiving identity and Receive view. It adapts pinned CCC shell/controls while keeping all account state simulated. Match and nonmatch viewing profiles replace private-key entry. Mode changes cancel outstanding fixture scans and invalidate old previews; fresh change is an optional send-preview setting.
+
 ## Send flow
 
 1. Validate the recipient's meta-address and selected network. The meta-address carries public view and spend keys; it is not a transaction hash or a normal CKB address.

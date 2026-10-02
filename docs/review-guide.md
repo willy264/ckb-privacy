@@ -4,6 +4,8 @@ This repository proposes a bounded, opt-in `@ckb-ccc/stealth` package for CCC ap
 
 The package is private. No upstream acceptance, published package, completed independent security review, or real testnet send/scan/spend lifecycle is claimed. [Current status](status.md) records the implementation boundary; [source provenance](research.md) identifies the reused protocol references.
 
+For the immediate UX review, start with the [CCC + Incognito demo guide](ccc-ui-demo.md) and [pinned CCC UI adaptation](../examples/incognito/CCC_UPSTREAM.md). The same local account supports normal receiving and opt-in stealth receiving. Review the toggle, identity sharing, Normal/Incognito comparison and visible disclosure before assessing the deeper API. This is a selective local UI fork; no public fork or official CCC integration is claimed.
+
 ## Suggested reading order
 
 | Read | Review purpose |

@@ -4,6 +4,8 @@ A local candidate for `@ckb-ccc/stealth`: an opt-in package that gives CCC appli
 
 The package is **private and experimental**. Its working name does not imply CCC endorsement, publication, or upstream acceptance. Local cryptographic operations and unsigned CCC outputs work; live chain scanning, witness signing, transaction completion, and a verified testnet lifecycle remain pending.
 
+The current deliverable is a [CCC + Incognito UX proof of concept](docs/ccc-ui-demo.md). The example adapts the CCC app shell and controls from the release matching core 1.12.5, then adds one optional Incognito switch. Compare normal receiving, a copyable stealth identity, send previews and fixture recognition without connecting a wallet. [Pinned upstream sources and adaptations](examples/incognito/CCC_UPSTREAM.md) make the local UI fork reviewable; it is not a complete CCC monorepo fork or an official upstream feature.
+
 **Privacy scope:** one-time addresses reduce linkage to a recipient's published identity. Amounts, sender inputs, and the transaction graph remain public. Fresh change reduces address reuse; it does not hide amounts or eliminate correlation.
 
 ## Start reviewing here
@@ -23,7 +25,7 @@ scripts/             Workspace structure checks
 docs/                Review, design, security, validation, and evidence
 ```
 
-The active workspace contains only the package and example. Earlier project implementations are available in Git history at commit `099c6ad`; they are outside the current review surface. The repository URL retains its historical name.
+The active workspace contains only the package and example. Earlier project implementations are available in Git history at commit `099c6ad`; they are outside the current review surface. The repository is now [willy264/ckb-privacy](https://github.com/willy264/ckb-privacy).
 
 ## Run and verify
 
