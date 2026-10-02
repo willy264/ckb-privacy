@@ -1,0 +1,36 @@
+/* Tailwind utility styles translated from the pinned CCC demo shell, Button
+   and Input components. All selectors are scoped to the local adaptation.
+   Source mapping: ../../CCC_UPSTREAM.md. */
+.ccc-shell { min-height: 100dvh; display: flex; flex-direction: column; position: relative; isolation: isolate; color: #262626; background: #fff; }
+.ccc-shell .ccc-backdrop { pointer-events: none; position: fixed; inset: 0; z-index: -1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: .035; }
+.ccc-shell .ccc-backdrop img { width: min(60vw, 60vh); }
+.ccc-shell .ccc-backdrop span { margin-top: 24px; font-size: 72px; font-weight: 700; letter-spacing: 16px; }
+.ccc-shell .ccc-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #e5e7eb; background: #fff; padding: 12px 32px; }
+.ccc-shell .ccc-links { display: flex; align-items: center; gap: 28px; }
+.ccc-shell .ccc-links a { display: inline-flex; align-items: center; justify-content: center; color: #171717; text-decoration: none; }
+.ccc-shell .ccc-links a:hover { color: #0891b2; }
+.ccc-shell .ccc-brand { gap: 10px; font-size: 21px; }
+.ccc-shell .ccc-account-status { display: flex; align-items: center; gap: 9px; font-size: 12px; }
+.ccc-shell .ccc-account-status > span { border-radius: 999px; padding: 5px 9px; background: #f5f5f5; color: #737373; font-size: 9px; font-weight: 700; letter-spacing: .6px; }
+.ccc-shell .ccc-main { position: relative; flex: 1; width: 100%; }
+.ccc-shell .ccc-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 12px 32px; border-top: 1px solid #e5e7eb; background: #fff; color: #737373; font-size: 11px; }
+.ccc-shell .ccc-footer a { color: inherit; text-underline-offset: 3px; }
+.ccc-shell .ccc-network { display: inline-flex; align-items: center; gap: 8px; }
+.ccc-shell .ccc-button { display: inline-flex; align-items: center; justify-content: center; border: 3px solid; border-radius: 9999px; padding: 8px 16px; font-weight: 700; text-decoration: none; }
+.ccc-shell .ccc-button:disabled { opacity: .7; }
+.ccc-shell .ccc-button-icon { display: inline-flex; margin-right: 8px; }
+.ccc-shell .ccc-button-primary { border-color: #a3a3a3; background: #262626; color: #fff; }
+.ccc-shell .ccc-button-info { border-color: #d4d4d4; background: #f5f5f5; color: #000; }
+.ccc-shell .ccc-button-success { border-color: #86efac; background: #dcfce7; color: #059669; }
+.ccc-shell .ccc-button-danger { border-color: #ef4444; background: #fca5a5; color: #b91c1c; }
+.ccc-shell .ccc-field { position: relative; padding: 16px; background: rgb(255 255 255 / 75%); }
+.ccc-shell .ccc-field label { display: block; font-size: 14px; }
+.ccc-shell .ccc-input { width: 100%; padding: 8px 16px; border: 0; border-bottom: 2px dashed #d1d5db; color: #374151; background: transparent; }
+.ccc-shell .ccc-input-filled, .ccc-shell .ccc-input:focus { border-bottom-style: solid; }
+.ccc-shell .ccc-input:focus-visible { outline: 2px solid #0891b2; outline-offset: 3px; }
+@media (max-width: 650px) {
+  .ccc-shell .ccc-header { padding: 12px 16px; }
+  .ccc-shell .ccc-links { gap: 18px; }
+  .ccc-shell .ccc-account-status { width: 100%; }
+  .ccc-shell .ccc-footer { padding: 12px 16px; }
+}
