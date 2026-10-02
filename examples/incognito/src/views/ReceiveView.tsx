@@ -2,10 +2,31 @@ import { ccc } from '@ckb-ccc/core';
 import { ArrowDownLeft, ArrowUpRight, CheckCircle2, KeyRound, Radio, ScanLine, ShieldCheck } from 'lucide-react';
 import { Badge } from '../components/Badge';
 import { CodeValue } from '../components/CodeValue';
+import { normalDemoAddress } from '../demo/fixtures';
+import { CccButton } from '../ccc/CccControls';
 import type { ReceiveDemo } from '../hooks/useReceiveDemo';
 
-export function ReceiveView({ demo }: { demo: ReceiveDemo }) {
+export function ReceiveView({ demo, incognito }: { demo: ReceiveDemo; incognito: boolean }) {
   const { matches, rejected, spend } = demo;
+
+  if (!incognito) {
+    return (
+      <section className="card receive-card" data-testid="normal-receive">
+        <div className="card-heading">
+          <span className="icon-box"><ArrowDownLeft size={23} /></span>
+          <div><span className="eyebrow">NORMAL MODE</span><h2>Receive CKB</h2></div>
+          <Badge tone="amber">DEMO</Badge>
+        </div>
+        <p className="card-intro">Share your normal receiving address. Each payment to this address can be directly grouped with the others.</p>
+        <CodeValue label="Reusable testnet address · demo only">{normalDemoAddress}</CodeValue>
+        <div className="empty-state">
+          <ArrowDownLeft size={30} /><h3>One address, every time</h3>
+          <p>Enable Incognito mode to share a stealth receiving identity and recognize payments to one-time destinations.</p>
+        </div>
+        <p className="microcopy">No balance or incoming chain activity is loaded. Do not send assets to this demo address.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="card receive-card" data-testid="receive-view">
@@ -17,22 +38,27 @@ export function ReceiveView({ demo }: { demo: ReceiveDemo }) {
       <p className="card-intro">Use a view key to recognize incoming one-time outputs. This demonstration checks two local fixtures; it does not scan CKB.</p>
       <div className="fixture-warning">
         <KeyRound size={16} />
-        <p><strong>Public demo key — never use for funds.</strong> Your real view key reveals incoming activity. Do not paste real keys into this demo.</p>
+        <p><strong>Public demo profiles only.</strong> Viewing information checks which payments belong to you. No real private keys are needed or accepted here.</p>
       </div>
       <div className="field-heading">
-        <label htmlFor="view-key">Demo view key</label>
-        <button className="button-text" onClick={demo.useDemoKey}>Use demo key</button>
+        <label htmlFor="viewing-profile">Demo viewing profile</label>
       </div>
-      <input
-        id="view-key" className="key-input" spellCheck={false}
-        value={demo.viewKey} onChange={event => demo.updateViewKey(event.target.value)}
-      />
+      <select id="viewing-profile" value={demo.profile} onChange={event => demo.updateProfile(event.target.value === 'unrelated' ? 'unrelated' : 'matching')}>
+        <option value="matching">Demo account · one matching payment</option>
+        <option value="unrelated">Different viewing key · no matching payments</option>
+      </select>
+      <details className="technical-details">
+        <summary>Technical details: public fixture viewing key</summary>
+        <CodeValue label="Public demo view key · never use for funds">{demo.viewKey}</CodeValue>
+      </details>
       <div className="scan-controls">
         <span><Radio size={15} />Source: local public fixtures</span>
-        <button className="button-primary" onClick={demo.scan}><ScanLine size={17} />Scan fixture payments</button>
+        <CccButton className="button-primary" disabled={demo.busy} onClick={demo.scan}><ScanLine size={17} />{demo.busy ? 'Checking fixture payments…' : 'Scan fixture payments'}</CccButton>
       </div>
       {demo.error && <div className="error-message" role="alert">{demo.error}</div>}
-      {matches === null ? (
+      {demo.busy ? (
+        <div className="empty-state" role="status"><ScanLine size={30} /><h3>Checking local fixtures…</h3><p>No chain request is being made.</p></div>
+      ) : matches === null ? (
         <div className="empty-state">
           <ScanLine size={35} /><h3>Ready to scan locally</h3>
           <p>The view key checks ownership without signing a transaction.</p>
@@ -54,9 +80,9 @@ export function ReceiveView({ demo }: { demo: ReceiveDemo }) {
               <CodeValue label="Detected one-time address" testId="detected-address">{match.address}</CodeValue>
               <div className="payment-footer">
                 <span><CheckCircle2 size={14} />View-key match verified locally</span>
-                <button className="button-secondary" onClick={() => demo.prepareSpend(match)}>
+                <CccButton variant="info" className="button-secondary" onClick={() => demo.prepareSpend(match)}>
                   Spend simulation<ArrowUpRight size={15} />
-                </button>
+                </CccButton>
               </div>
             </article>
           ))}

@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { Check, CheckCircle2, Code2, Eye, RefreshCw, ScanLine, Send, Shield, ShieldCheck } from 'lucide-react';
+import { ArrowDownLeft, Eye, RefreshCw, Send, Shield, Wallet } from 'lucide-react';
+import { CccDemoShell } from './ccc/CccDemoShell';
+import { CccButton } from './ccc/CccControls';
 import { Badge } from './components/Badge';
 import { ChangeHygiene } from './components/ChangeHygiene';
 import { Disclosure } from './components/Disclosure';
 import { Handoff } from './components/Handoff';
+import { ModeComparison } from './components/ModeComparison';
+import { ReceivingIdentity } from './components/ReceivingIdentity';
 import { useReceiveDemo } from './hooks/useReceiveDemo';
 import { useSendDemo } from './hooks/useSendDemo';
 import { ReceiveView } from './views/ReceiveView';
@@ -11,120 +15,103 @@ import { SendView } from './views/SendView';
 
 type Tab = 'send' | 'receive' | 'disclosure';
 
-const tabs = [
-  { id: 'send', name: 'Send', icon: Send },
-  { id: 'receive', name: 'Scan & receive', icon: ScanLine },
-  { id: 'disclosure', name: 'Disclosure', icon: Eye },
-] as const;
-
 export default function App() {
   const [tab, setTab] = useState<Tab>('send');
+  const [connected, setConnected] = useState(true);
+  const [comparison, setComparison] = useState(false);
   const send = useSendDemo();
   const receive = useReceiveDemo();
   const { incognito } = send;
-
-  // A change preview belongs to its operation, never to a different tab's draft.
   const visibleChange = tab === 'send' ? send.change : tab === 'receive' ? receive.spend?.change : undefined;
-  const freshChangeEnabled = incognito || tab === 'receive';
+
+  function toggleMode() {
+    send.toggleMode();
+    receive.reset();
+  }
 
   function reset() {
     setTab('send');
+    setConnected(true);
+    setComparison(false);
     send.reset();
     receive.reset();
   }
 
+  function disconnect() {
+    send.reset();
+    receive.reset();
+    setTab('send');
+    setConnected(false);
+  }
+
+  const tabs = [
+    { id: 'send' as const, name: 'Send', icon: Send },
+    { id: 'receive' as const, name: incognito ? 'Scan & receive' : 'Receive', icon: ArrowDownLeft },
+    { id: 'disclosure' as const, name: 'Disclosure', icon: Eye },
+  ];
+
   return (
-    <div className="app-shell">
-      <header className="topbar">
-        <a href="/" className="brand" aria-label="CCC Incognito home">
-          <span className="brand-mark">c<span>c</span>c</span>
-          <span className="brand-divider" /><span className="brand-title">Incognito</span>
-        </a>
-        <div className="topbar-right">
-          <code className="package-name">@ckb-ccc/stealth</code>
-          <span className="local-status"><span />Local demonstration</span>
+    <CccDemoShell>
+      <div className="incognito-app" data-testid="ccc-app">
+        <div className="page-heading">
+          <div><span className="eyebrow">CCC APPLICATION · LOCAL UI FORK</span><h1>CCC, with an Incognito switch.</h1></div>
+          <Badge tone="neutral">UNOFFICIAL PROTOTYPE</Badge>
         </div>
-      </header>
-      <main className="page">
-        <div className="evidence-banner" role="status">
-          <span className="banner-tag">SIMULATED</span>
-          <span><strong>Target flow demonstration.</strong> Public demo keys and local fixtures. No live scanning, wallet approval or on-chain settlement. Not deployment evidence.</span>
+        <div className="evidence-banner">
+          <span className="banner-tag">DEMO</span>
+          <p><strong>Demo only. Do not enter real private keys or send real assets.</strong><br />Public fixture account. Chain-dependent steps are SIMULATED. Not deployment evidence.</p>
         </div>
-        <section className="hero">
-          <div className="hero-copy">
-            <span className="eyebrow"><span className="small-line" /> AN OPT-IN CAPABILITY FOR CCC</span>
-            <h1>Incognito mode,<br /><span>inside your app.</span></h1>
-            <p>Send to a one-time address. Discover your payments.<br className="desktop-break" /> Spend with the same CCC transaction flow.</p>
+        <section className={`account-panel ${incognito ? 'mode-on' : ''}`} aria-label="Demo account">
+          <div className="account-toolbar">
+            <div className="account-status"><Wallet size={18} /><strong>{connected ? 'Demo account' : 'No demo account selected'}</strong><span>{connected ? 'Simulated connection · no wallet connected' : 'Explore without connecting a real wallet'}</span></div>
+            {connected && <button className="button-text" onClick={disconnect}>Disconnect demo</button>}
           </div>
-          <div className={`mode-card ${incognito ? 'mode-on' : ''}`}>
-            <div className="mode-card-heading">
-              <div className="mode-icon"><Shield size={23} /></div>
-              <Badge tone={incognito ? 'blue' : 'neutral'}>{incognito ? 'STEALTH SEND' : 'NORMAL SEND'}</Badge>
-            </div>
-            <div className="mode-toggle-line">
-              <div>
-                <label id="incognito-label">Incognito mode</label>
-                <p>{incognito ? 'One-time receiving is enabled' : 'Your usual CCC sending flow'}</p>
+          <div className="account-content">
+            <div className="mode-control">
+              <div className="mode-toggle-line">
+                <div><span className="mode-state">{incognito ? 'INCOGNITO ON' : 'NORMAL MODE'}</span><label id="incognito-label">Incognito mode</label></div>
+                <button type="button" className="switch" role="switch" aria-checked={incognito} aria-labelledby="incognito-label"
+                  disabled={!connected} onClick={toggleMode} data-testid="incognito-toggle"><span /></button>
               </div>
-              <button
-                type="button" className="switch" role="switch" aria-checked={incognito}
-                aria-labelledby="incognito-label" onClick={send.toggleMode} data-testid="incognito-toggle"
-              >
-                <span />
-              </button>
+              <p>{incognito ? 'Same CCC flow. Fresh destinations for receiving.' : 'Your usual address. Enable one-time receiving when you need it.'}</p>
+              <button className="button-text compare-button" aria-expanded={comparison} aria-controls="mode-comparison" onClick={() => setComparison(value => !value)}>What changed?</button>
             </div>
-            <div className="mode-card-footer">
-              <CheckCircle2 size={15} /><span>Opt-in package. Existing CCC client & signer.</span>
-            </div>
+            {connected ? <ReceivingIdentity incognito={incognito} /> : (
+              <div className="connection-empty">
+                <h2>Try a public demo account</h2><p>No extension, private key or real assets required.</p>
+                <CccButton className="button-primary" onClick={() => setConnected(true)}><Wallet size={16} />Use demo account</CccButton>
+              </div>
+            )}
           </div>
         </section>
-        <div className="scope-banner">
-          <ShieldCheck size={19} />
-          <p><strong>Recipient unlinkability, within a clear scope.</strong> Amounts and sender inputs are NOT hidden. Timing, network and amount correlation remain possible.</p>
-        </div>
+        {comparison && <ModeComparison incognito={incognito} />}
+        <div className="scope-banner"><Shield size={18} /><p><strong>Amounts and sender inputs are NOT hidden.</strong> Stealth receiving reduces direct recipient linkage. Outputs, timing and transaction relationships remain observable.</p></div>
         <div className="workbench-header">
           <nav className="tabs" aria-label="Demo views">
             {tabs.map(({ id, name, icon: Icon }) => (
-              <button
-                key={id} className={tab === id ? 'tab active' : 'tab'}
-                aria-current={tab === id ? 'page' : undefined} onClick={() => setTab(id)}
-              >
-                <Icon size={17} />{name}
-              </button>
+              <button key={id} className={tab === id ? 'tab active' : 'tab'} aria-current={tab === id ? 'page' : undefined}
+                disabled={!connected && id !== 'disclosure'} onClick={() => setTab(id)}><Icon size={17} />{name}</button>
             ))}
           </nav>
           <button className="button-text reset-button" onClick={reset}><RefreshCw size={14} />Reset demo</button>
         </div>
-        <div className={`workspace ${tab === 'disclosure' ? 'workspace-disclosure' : ''}`}>
+        <div className="workspace">
           <div className="primary-column">
-            {tab === 'send' && <SendView demo={send} />}
-            {tab === 'receive' && <ReceiveView demo={receive} />}
+            {connected && tab === 'send' && <SendView demo={send} />}
+            {connected && tab === 'receive' && <ReceiveView demo={receive} incognito={incognito} />}
             {tab === 'disclosure' && <Disclosure incognito={incognito} expanded />}
-            {tab !== 'disclosure' && <Handoff built={Boolean(send.draft)} />}
+            {!connected && tab !== 'disclosure' && <section className="card empty-state"><Wallet size={30} /><h2>Choose a demo account to continue</h2><p>Normal and Incognito previews both use public local fixtures.</p></section>}
+            {connected && (tab === 'send' || (tab === 'receive' && incognito)) && (
+              <details className="handoff-details"><summary>How this would hand off to CCC <Badge tone="amber">SIMULATED</Badge></summary><Handoff built={tab === 'send' && Boolean(send.draft)} /></details>
+            )}
           </div>
           <aside className="sidebar">
-            {tab !== 'disclosure' && <Disclosure incognito={incognito || tab === 'receive'} />}
-            <ChangeHygiene enabled={freshChangeEnabled} hasFreshChange={Boolean(visibleChange)} />
-            <section className="boundary-card">
-              <div className="boundary-title"><Code2 size={18} /><h3>One package. Existing CCC.</h3></div>
-              <code>@ckb-ccc/stealth</code>
-              <ul>
-                <li><Check size={15} />Meta-address & one-time derivation</li>
-                <li><Check size={15} />View-key detection & spend authority</li>
-                <li><Check size={15} />Optional fresh-change helper</li>
-              </ul>
-              <div className="boundary-divider" />
-              <p>The app keeps its CCC client, wallet and signer. Target on-chain boundary: the existing Obscell stealth lock on CKB testnet.</p>
-              <span className="mini-note">Local prototype · proposed upstream package</span>
-            </section>
+            {tab !== 'disclosure' && <Disclosure incognito={incognito} />}
+            {connected && tab !== 'disclosure' && <ChangeHygiene enabled={incognito && (tab === 'receive' || send.freshChange)} hasFreshChange={Boolean(visibleChange)} />}
+            <p className="prototype-note"><code>@ckb-ccc/stealth</code> is our experimental extension. It is not an official CCC package. Local account and transaction activity is simulated.</p>
           </aside>
         </div>
-        <footer className="footer">
-          <span><Shield size={15} />Incognito mode for CCC</span>
-          <p>Local target-flow demo. Public fixture keys. No on-chain activity.</p>
-          <span className="footer-version">@ckb-ccc/stealth · prototype</span>
-        </footer>
-      </main>
-    </div>
+      </div>
+    </CccDemoShell>
   );
 }

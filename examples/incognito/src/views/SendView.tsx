@@ -5,6 +5,7 @@ import {
 import { Badge } from '../components/Badge';
 import { CodeValue } from '../components/CodeValue';
 import type { SendDemo } from '../hooks/useSendDemo';
+import { CccButton, CccTextInput } from '../ccc/CccControls';
 
 export function SendView({ demo }: { demo: SendDemo }) {
   const { incognito, payment, draft, change, amount } = demo;
@@ -15,7 +16,7 @@ export function SendView({ demo }: { demo: SendDemo }) {
         <span className="icon-box"><ArrowUpRight size={23} /></span>
         <div>
           <span className="eyebrow">{incognito ? 'STEALTH SEND' : 'STANDARD CCC SEND'}</span>
-          <h2>{incognito ? 'A fresh address. Every payment.' : 'Start with your usual send.'}</h2>
+          <h2>Transfer CKB</h2>
         </div>
         <Badge tone="amber">SIMULATED</Badge>
       </div>
@@ -51,14 +52,14 @@ export function SendView({ demo }: { demo: SendDemo }) {
         <div className="amount-field">
           <label htmlFor="amount">Amount <span>visible on-chain</span></label>
           <div>
-            <input id="amount" inputMode="decimal" value={amount} onChange={event => demo.updateAmount(event.target.value)} />
+            <CccTextInput id="amount" inputMode="decimal" state={[amount, demo.updateAmount]} />
             <span>CKB</span>
           </div>
         </div>
         {incognito && (
-          <button className="button-primary" onClick={demo.derive}>
+          <CccButton className="button-primary" onClick={demo.derive}>
             <Fingerprint size={17} />Derive one-time address<ArrowRight size={16} />
-          </button>
+          </CccButton>
         )}
       </div>
       {payment && incognito && (
@@ -67,26 +68,36 @@ export function SendView({ demo }: { demo: SendDemo }) {
             <CheckCircle2 size={17} /><strong>One-time address derived locally</strong><Badge>REAL KEY DERIVATION</Badge>
           </div>
           <CodeValue label="One-time testnet address · do not fund" testId="one-time-address">{payment.address}</CodeValue>
-          <CodeValue label="Ephemeral public key · published with the output" testId="ephemeral-public-key">{payment.ephemeralPublicKey}</CodeValue>
+          <details className="technical-details">
+            <summary>Technical details: ephemeral public key</summary>
+            <CodeValue label="Ephemeral public key · published with the output" testId="ephemeral-public-key">{payment.ephemeralPublicKey}</CodeValue>
+          </details>
           <p className="microcopy">A fresh ephemeral key produces a different address each time. Local cryptographic output is not evidence of settlement.</p>
         </div>
       )}
       {demo.error && <div className="error-message" role="alert">{demo.error}</div>}
+      {incognito && (
+        <label className="change-option">
+          <input type="checkbox" aria-label="Preview fresh change" aria-describedby="fresh-change-help" checked={demo.freshChange} onChange={demo.toggleFreshChange} />
+          <span>Preview fresh change <small id="fresh-change-help">Optional · a separate one-time return address</small></span>
+        </label>
+      )}
       <div className="build-row">
         <span><Lock size={15} />Unsigned preview only</span>
-        <button
+        <CccButton
+          variant={incognito ? 'info' : 'primary'}
           className={incognito ? 'button-secondary' : 'button-primary'}
           disabled={demo.busy || (incognito && !payment)} onClick={demo.buildDraft}
         >
-          Build transaction preview<ChevronRight size={16} />
-        </button>
+          {demo.busy ? 'Building preview…' : 'Build transaction preview'}<ChevronRight size={16} />
+        </CccButton>
       </div>
       {draft && (
         <div className="draft-result" data-testid="transaction-preview">
           <div className="result-heading">
             <CheckCircle2 size={17} /><strong>CCC output draft built</strong><Badge tone="amber">SIMULATED TRANSACTION</Badge>
           </div>
-          <p>Output capacity: <strong>{amount} CKB</strong>. No inputs selected, fees completed, signatures or submission.</p>
+          <p>Output capacity: <strong>{amount} CKB</strong>. Not submitted to chain. No inputs selected, fees completed or signatures.</p>
           <details><summary><Code2 size={15} />Inspect unsigned CCC output</summary><pre>{draft}</pre></details>
         </div>
       )}
